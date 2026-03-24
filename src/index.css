@@ -1,0 +1,387 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /*
+     * Saathi Snacks - refined palette
+     * Coral Pink #EF727F · Forest #2C7B65 · Charcoal #4D4846 · Apricot #F8C697 · Sand #FDEBD3
+     * Golden Mustard #EBB035 - accent (sparingly)
+     */
+    --mustard: 43 83% 56%;
+
+    --background: 34 91% 91%;       /* Soft Sand #FDEBD3 */
+    --foreground: 20 5% 29%;       /* Earthy Charcoal #4D4846 */
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 5% 29%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 5% 29%;
+
+    --primary: 352 78% 69%;         /* Coral Pink #EF727F */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 162 47% 33%;       /* Deep Forest Green #2C7B65 */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 34 42% 93%;
+    --muted-foreground: 20 8% 42%;
+
+    --accent: 28 88% 78%;           /* Apricot Peach #F8C697 */
+    --accent-foreground: 20 5% 29%;
+
+    --destructive: 0 72% 52%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 162 45% 36%;        /* Forest-adjacent for veg / halal harmony */
+    --success-foreground: 0 0% 100%;
+
+    /* Kept token name for Tailwind; colour is forest (dark brand surfaces) */
+    --deep-purple: 162 47% 33%;
+    --deep-purple-foreground: 0 0% 100%;
+
+    --border: 34 28% 86%;
+    --input: 34 28% 86%;
+    --ring: 352 78% 69%;
+
+    --radius: 0.75rem;
+
+    /* Fixed Navbar: h-16 + border-b — sticky stacks pin flush under this */
+    --nav-sticky-offset: calc(4rem + 1px);
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(34 91% 91%) 0%, hsl(28 55% 88%) 100%);
+    --gradient-purple: linear-gradient(135deg, hsl(162 47% 28%) 0%, hsl(162 42% 38%) 100%);
+    --gradient-pink: linear-gradient(135deg, hsl(352 78% 64%) 0%, hsl(352 72% 58%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(28 88% 78%) 0%, hsl(28 75% 70%) 100%);
+
+    /* Drop shadows - black only (text, cards, filters) */
+    --shadow-card: 0 4px 24px -4px hsl(20 5% 29% / 0.08);
+    --shadow-card-hover: 0 8px 32px -4px hsl(20 5% 29% / 0.14);
+    --shadow-pink: 0 4px 20px -4px hsl(352 65% 45% / 0.28);
+    --shadow-gold: 0 4px 20px -4px hsl(28 60% 50% / 0.22);
+
+    /* Site-wide soft text depth (body) + divider drop-shadow - tune layers here */
+    --text-depth-layer-1: 0 1px 16px hsl(0 0% 0% / 0.07);
+    --text-depth-layer-2: 0 2px 56px hsl(0 0% 0% / 0.038);
+    --text-depth-shadow: var(--text-depth-layer-1), var(--text-depth-layer-2);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'DM Sans', sans-serif;
+    text-shadow: var(--text-depth-shadow);
+  }
+
+  /* Form controls & monospace - shadow reads as smear / blur */
+  input,
+  textarea,
+  select,
+  optgroup,
+  option,
+  pre,
+  code,
+  kbd,
+  samp {
+    text-shadow: none;
+  }
+
+  /* Homepage hero - no text drop shadow (inherits none; CTA keeps box-shadow in JSX) */
+  .home-hero-copy {
+    text-shadow: none;
+  }
+
+  /**
+   * Feathered frosted veil behind hero copy only: backdrop blur fades out via radial mask
+   * (not a card — no border; soft elliptical falloff).
+   */
+  .home-hero-blur-feather {
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+    /* Extend slightly past copy so the feather reads naturally */
+    inset: -1.25rem -0.75rem -1.5rem -0.75rem;
+    border-radius: 0;
+    background: hsl(var(--background) / 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    mask-image: radial-gradient(
+      ellipse 82% 88% at 44% 44%,
+      #000 0%,
+      #000 28%,
+      rgba(0, 0, 0, 0.45) 52%,
+      transparent 74%
+    );
+    -webkit-mask-image: radial-gradient(
+      ellipse 82% 88% at 44% 44%,
+      #000 0%,
+      #000 28%,
+      rgba(0, 0, 0, 0.45) 52%,
+      transparent 74%
+    );
+    mask-mode: alpha;
+  }
+
+  @media (min-width: 768px) {
+    .home-hero-blur-feather {
+      inset: -1.75rem -1rem -2rem -1rem;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+  }
+}
+
+@layer components {
+  .font-label {
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .btn-pill {
+    @apply inline-flex items-center justify-center rounded-2xl px-5 py-2 font-label font-semibold text-sm tracking-wide transition-[transform,box-shadow,background-color,color,border-color] duration-300;
+  }
+
+  .btn-pill:hover {
+    transform: scale(1.02);
+  }
+
+  .btn-pill:active {
+    transform: scale(0.98);
+  }
+
+  .btn-primary-pill {
+    @apply btn-pill bg-primary text-primary-foreground;
+    box-shadow: var(--shadow-pink);
+  }
+
+  .btn-primary-pill:hover {
+    box-shadow: 0 6px 28px -4px hsl(0 0% 0% / 0.32);
+  }
+
+  .btn-outline-pill {
+    @apply btn-pill border-2 border-deep-purple text-deep-purple bg-transparent;
+  }
+
+  .btn-outline-pill:hover {
+    @apply bg-deep-purple text-deep-purple-foreground;
+  }
+
+  /** Mid-century card shell - soft sand fill (use on coloured / dark bands) */
+  .card-midcentury {
+    background-color: #FDEBD3;
+    border: 2px solid #4d4846;
+    box-shadow: 6px 6px 0 #4d4846;
+    @apply rounded-2xl;
+  }
+
+  /** Same frame; warm paper fill so cards read clearly on soft-sand section backgrounds */
+  .card-midcentury-on-sand {
+    background-color: #fff9f2;
+    border: 2px solid #4d4846;
+    box-shadow: 6px 6px 0 #4d4846;
+    @apply rounded-2xl;
+  }
+
+  .card-saathi {
+    @apply card-midcentury p-6;
+    /* Shadow steps instantly so it only “pushes out”, never morphs inward mid-hover */
+    transition: transform 0.3s ease-out;
+  }
+
+  .card-saathi:hover {
+    box-shadow: 8px 8px 0 #4d4846;
+    transform: translate3d(0, -2px, 0);
+  }
+
+  .card-saathi-on-sand {
+    @apply card-midcentury-on-sand p-6;
+    transition: transform 0.3s ease-out;
+  }
+
+  .card-saathi-on-sand:hover {
+    box-shadow: 8px 8px 0 #4d4846;
+    transform: translate3d(0, -2px, 0);
+  }
+
+  /** Photo / hero imagery - same mid-century frame as cards, with inset “print” mat */
+  .midcentury-photo-frame {
+    @apply card-midcentury-on-sand flex h-full min-h-0 w-full min-w-0 flex-col p-2 sm:p-2.5;
+  }
+
+  .midcentury-photo-frame-inner {
+    @apply min-h-0 flex-1 overflow-hidden rounded-[10px];
+  }
+
+  .section-padding {
+    @apply py-20 md:py-28 px-4 md:px-8;
+  }
+
+  /* Nav CTA shimmer - CSS only (no Framer spring loop on the main thread) */
+  .nav-cta-shimmer-ray {
+    background: linear-gradient(
+      105deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.22) 42%,
+      rgba(255, 255, 255, 0.38) 50%,
+      rgba(255, 255, 255, 0.22) 58%,
+      transparent 100%
+    );
+    transform: translate3d(-130%, 0, 0);
+    animation: nav-cta-shimmer-slide 2.5s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-cta-shimmer-ray {
+      animation: none;
+      opacity: 0;
+    }
+  }
+
+  @keyframes nav-cta-shimmer-slide {
+    0% {
+      transform: translate3d(-130%, 0, 0);
+    }
+    100% {
+      transform: translate3d(320%, 0, 0);
+    }
+  }
+
+  /* GPU-friendly marquee - avoids Framer Motion layout on every frame */
+  .trust-ticker-track {
+    animation: trust-ticker-marquee 55s linear infinite;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .trust-ticker-track {
+      animation: none;
+    }
+  }
+
+  @keyframes trust-ticker-marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  /* Our Story - Mughal divider depth (mustard fill) */
+  .our-story-copy-shadow .mughal-divider-shape {
+    filter:
+      drop-shadow(0 1px 2px hsl(0 0% 0% / 0.28))
+      drop-shadow(0 3px 10px hsl(0 0% 0% / 0.18));
+  }
+
+  /* Contact page - circle mesh fills the full content section (below hero; cards + form + map) */
+  .contact-section-mesh {
+    @apply relative overflow-hidden;
+    background-color: hsl(34 50% 93%);
+    background-image:
+      radial-gradient(ellipse 110% 75% at 50% -15%, hsl(352 60% 88% / 0.45), transparent 58%),
+      radial-gradient(ellipse 70% 55% at 100% 15%, hsl(28 70% 90% / 0.35), transparent 52%),
+      radial-gradient(ellipse 65% 50% at 0% 85%, hsl(162 35% 88% / 0.35), transparent 54%),
+      radial-gradient(ellipse 80% 45% at 95% 95%, hsl(28 85% 88% / 0.32), transparent 50%),
+      linear-gradient(165deg, hsl(34 85% 96%) 0%, hsl(34 50% 93%) 45%, hsl(34 60% 95%) 100%);
+  }
+
+  .gold-border-detail {
+    border: 2px solid hsl(var(--accent));
+    border-radius: var(--radius);
+  }
+
+  .badge-halal {
+    @apply font-label text-xs font-semibold px-3 py-1 rounded-full bg-primary text-primary-foreground;
+  }
+
+  .badge-vegetarian {
+    @apply font-label text-xs font-semibold px-3 py-1 rounded-full bg-success text-success-foreground;
+  }
+
+  /* Menu preview: JS overwrites with measured px; fallback avoids invalid calc before measure */
+  .menu-preview-stack {
+    --menu-preview-header-stack-height: 11rem;
+  }
+
+  /* Nav bar: frosted glass (backdrop blur is heavier while scrolling but reads clearly) */
+  .frosted-glass {
+    @apply backdrop-blur-2xl backdrop-saturate-150;
+    background: hsl(34 85% 96% / 0.78);
+    box-shadow: 0 1px 0 hsl(34 25% 86% / 0.9);
+  }
+
+  /* SpotlightCard - static card (no cursor spotlight) */
+  .spotlight-card {
+    position: relative;
+    @apply card-midcentury p-6 overflow-hidden;
+  }
+
+  .spotlight-card--on-sand {
+    position: relative;
+    @apply card-midcentury-on-sand p-6 overflow-hidden;
+  }
+
+}
+
+/*
+ * True #ffffff for light-on-dark UI text. shadcn maps these to hsl(0 0% 100%)
+ * but theme / stacking / subpixel can read dingy; !important wins utilities.
+ * Avoid opacity on ancestors of light text (multiplies toward gray).
+ */
+.text-white,
+.text-primary-foreground,
+.text-secondary-foreground,
+.text-deep-purple-foreground,
+.text-success-foreground,
+.text-destructive-foreground {
+  color: #ffffff !important;
+}
+
+.hover\:text-white:hover {
+  color: #ffffff !important;
+}
+
+/* Tailwind opacity modifiers on white still use white channel - pin to solid */
+.text-white\/90,
+.text-white\/95,
+.text-white\/80 {
+  color: #ffffff !important;
+}
+
+/* Dark hero/section shells: ensure inherited copy stays white */
+.bg-deep-purple.text-deep-purple-foreground,
+.bg-deep-purple.text-white,
+.bg-secondary.text-white {
+  color: #ffffff !important;
+}
+
+/* Site footer: every link uses coral pink on hover/focus (overrides .text-white !important on anchors) */
+footer.bg-deep-purple a:hover,
+footer.bg-deep-purple a:focus-visible {
+  color: hsl(var(--primary)) !important;
+}
