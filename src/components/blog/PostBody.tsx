@@ -23,7 +23,7 @@ function RenderBlocks({ blocks }: { blocks: ContentBlock[] }) {
             <figure key={i} className="my-8">
               <img
                 src={b.src}
-                alt={b.alt}
+                alt={b.alt || ""}
                 className="w-full max-h-[520px] rounded-2xl object-cover"
                 loading="lazy"
               />

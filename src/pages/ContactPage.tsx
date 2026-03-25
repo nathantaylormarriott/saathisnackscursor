@@ -19,6 +19,24 @@ const contactSchema = z.object({
 
 type ContactForm = z.infer<typeof contactSchema>;
 
+/** Netlify Forms (dashboard + email notifications). Field names must match index.html + form below. */
+async function submitToNetlifyForms(data: ContactForm) {
+  const params = new URLSearchParams();
+  params.append("form-name", "contact");
+  params.append("name", data.name);
+  params.append("email", data.email);
+  params.append("phone", data.phone ?? "");
+  params.append("enquiryType", data.enquiryType);
+  params.append("message", data.message);
+  params.append("bot-field", "");
+  const res = await fetch("/", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params.toString(),
+  });
+  if (!res.ok) throw new Error(`Netlify Forms returned ${res.status}`);
+}
+
 const enquiryTypes = [
   "Catering Order",
   "Kitchen Hire",
@@ -68,6 +86,14 @@ const ContactPage = () => {
         });
       } catch {
         /* optional webhook — ignore failures */
+      }
+    }
+
+    if (import.meta.env.PROD) {
+      try {
+        await submitToNetlifyForms(data);
+      } catch (e) {
+        console.warn("Netlify Forms submission failed (Supabase saved OK):", e);
       }
     }
 
@@ -139,7 +165,20 @@ const ContactPage = () => {
                   <p className="font-body text-muted-foreground">Thank you for getting in touch. We'll respond as soon as possible.</p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit(onSubmit)} className="card-midcentury-on-sand space-y-6 p-6">
+                <form
+                  name="contact"
+                  method="post"
+                  data-netlify="true"
+                  data-netlify-honeypot="bot-field"
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="card-midcentury-on-sand space-y-6 p-6"
+                >
+                  <input type="hidden" name="form-name" value="contact" />
+                  <p className="hidden" aria-hidden="true">
+                    <label>
+                      Do not fill this in: <input name="bot-field" tabIndex={-1} autoComplete="off" defaultValue="" />
+                    </label>
+                  </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="font-label text-sm font-medium text-deep-purple block mb-1">Full Name *</label>

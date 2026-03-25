@@ -5,3 +5,5 @@
 # Set in Netlify UI: Site settings → Environment variables
 # VITE_SUPABASE_URL
 # VITE_SUPABASE_ANON_KEY
+#
+# Forms: after deploy, Site settings → Forms & notifications → enable email for form "contact"

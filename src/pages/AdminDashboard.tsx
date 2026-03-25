@@ -95,7 +95,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <Layout>
+    <Layout hideFooter>
       <section className="section-padding bg-background min-h-[60vh]">
         <div className="container mx-auto max-w-5xl">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
