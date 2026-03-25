@@ -6,6 +6,8 @@
 
 @layer base {
   :root {
+    /* Fixed nav: content row h-16 + safe area (notch / status bar) */
+    --nav-height: calc(4rem + env(safe-area-inset-top, 0px));
     /*
      * Saathi Snacks - refined palette
      * Coral Pink #EF727F · Forest #2C7B65 · Charcoal #4D4846 · Apricot #F8C697 · Sand #FDEBD3
@@ -50,8 +52,8 @@
 
     --radius: 0.75rem;
 
-    /* Fixed Navbar: h-16 + border-b — sticky stacks pin flush under this */
-    --nav-sticky-offset: calc(4rem + 1px);
+    /* Fixed Navbar: total bar height + border — sticky stacks pin flush under this */
+    --nav-sticky-offset: calc(var(--nav-height) + 1px);
 
     /* Gradients */
     --gradient-hero: linear-gradient(135deg, hsl(34 91% 91%) 0%, hsl(28 55% 88%) 100%);
@@ -90,6 +92,13 @@
     @apply bg-background text-foreground;
     font-family: 'DM Sans', sans-serif;
     text-shadow: var(--text-depth-shadow);
+    overflow-x: clip;
+  }
+
+  button,
+  [role="button"],
+  [type="button"] {
+    touch-action: manipulation;
   }
 
   /* Form controls & monospace - shadow reads as smear / blur */
@@ -236,7 +245,7 @@
   }
 
   .section-padding {
-    @apply py-20 md:py-28 px-4 md:px-8;
+    @apply py-14 md:py-28 px-4 md:px-8;
   }
 
   /* Nav CTA shimmer - CSS only (no Framer spring loop on the main thread) */
@@ -272,8 +281,14 @@
 
   /* GPU-friendly marquee - avoids Framer Motion layout on every frame */
   .trust-ticker-track {
-    animation: trust-ticker-marquee 55s linear infinite;
+    animation: trust-ticker-marquee 72s linear infinite;
     will-change: transform;
+  }
+
+  @media (min-width: 768px) {
+    .trust-ticker-track {
+      animation-duration: 55s;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

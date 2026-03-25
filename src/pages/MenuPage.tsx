@@ -28,7 +28,7 @@ const MenuPage = () => {
       {/* Lunch Package - Hero Card */}
       <section className="section-padding">
         <div className="container mx-auto">
-          <div className="card-saathi-on-sand p-8 md:p-12">
+          <div className="card-saathi-on-sand p-5 sm:p-8 md:p-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div>
                 <div className="flex flex-wrap gap-2 mb-4">

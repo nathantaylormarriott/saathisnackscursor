@@ -82,7 +82,7 @@ const Index = () => {
     <Layout>
       {/* Hero - soft sand scrims; copy uses same container + horizontal padding as Navbar for logo alignment */}
       <section className="relative flex flex-col overflow-hidden bg-background">
-        <div className="relative flex min-h-[calc(100dvh-4rem)] w-full items-center">
+        <div className="relative flex min-h-[calc(100dvh-var(--nav-height))] w-full items-center">
           <div
             className="pointer-events-none absolute inset-x-0 top-[-12%] z-0 h-[124%] w-full"
             aria-hidden
@@ -105,26 +105,26 @@ const Index = () => {
             className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-background/45 via-transparent to-transparent"
             aria-hidden
           />
-          <div className="relative z-10 w-full py-16 md:py-24">
+          <div className="relative z-10 w-full py-12 sm:py-16 md:py-24">
             <div className="container mx-auto px-4 md:px-8">
               <div className="relative isolate max-w-2xl">
                 <div className="home-hero-blur-feather" aria-hidden />
                 <div className="relative z-[1] home-hero-copy">
-                  <p className="text-mustard text-sm font-semibold uppercase tracking-widest mb-3 block">
+                  <p className="text-mustard text-xs font-semibold uppercase tracking-widest mb-3 block sm:text-sm">
                     Birmingham&apos;s social enterprise caterer
                   </p>
-                  <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-deep-purple leading-tight mb-6">
+                  <h1 className="font-display text-[2.25rem] leading-[1.12] sm:text-5xl md:text-6xl lg:text-7xl font-bold text-deep-purple mb-5 sm:mb-6 sm:leading-tight">
                     Catering That
                     <br />
                     <span className="text-primary">Does More</span>
                   </h1>
-                  <p className="hero-lead font-body text-lg mb-8 max-w-lg text-foreground/90">
+                  <p className="hero-lead font-body text-base leading-relaxed sm:text-lg mb-7 max-w-lg text-foreground/90 sm:mb-8">
                     Fresh, authentic South Asian food for your group events, team lunches, and community gatherings, collected from Birmingham, made with heart. Every order supports women building brighter futures.
                   </p>
                   <div>
                     <Link
                       to="/menu"
-                      className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-label font-semibold px-6 py-3 rounded-2xl shadow-[var(--shadow-pink)] transition-[transform,colors,box-shadow] duration-300 hover:scale-[1.02] hover:bg-mustard hover:text-white active:scale-[0.98]"
+                      className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 font-label font-semibold text-primary-foreground shadow-[var(--shadow-pink)] transition-[transform,colors,box-shadow] duration-300 hover:scale-[1.02] hover:bg-mustard hover:text-white active:scale-[0.98] sm:w-auto"
                     >
                       View Our Menu
                     </Link>
@@ -137,7 +137,7 @@ const Index = () => {
       </section>
 
       {/* Our Story - warm cream (same as hero) */}
-      <section className="bg-background overflow-hidden px-0 pb-20 md:pb-28 lg:pb-32">
+      <section className="bg-background overflow-hidden px-0 pb-16 md:pb-28 lg:pb-32">
         <div
           className="relative z-10 w-full shrink-0 py-6 md:py-7 mb-12 md:mb-16 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]"
           role="region"
@@ -463,7 +463,7 @@ const Index = () => {
       {/* Testimonials */}
       <section className="section-padding bg-background text-foreground">
         <div className="container mx-auto">
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-center mb-10 md:mb-12 text-deep-purple">
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-center mb-8 text-deep-purple md:mb-12">
             What Our <span className="text-primary">Clients Say</span>
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -490,10 +490,10 @@ const Index = () => {
       </section>
 
       {/* Trust bar */}
-      <section className="py-8 bg-deep-purple text-white">
-        <div className="container mx-auto px-4 flex flex-wrap justify-center items-center gap-3 text-center">
-          <Users className="shrink-0 w-7 h-7 md:w-8 md:h-8 text-mustard" strokeWidth={2} />
-          <p className="text-white font-display text-lg md:text-xl font-semibold">
+      <section className="bg-deep-purple py-7 text-white md:py-8">
+        <div className="container mx-auto flex flex-wrap items-center justify-center gap-3 px-4 text-center">
+          <Users className="h-7 w-7 shrink-0 text-mustard md:h-8 md:w-8" strokeWidth={2} aria-hidden />
+          <p className="max-w-xl font-display text-base font-semibold leading-snug text-white md:max-w-none md:text-lg lg:text-xl">
             Trusted by charities, businesses, and community organisations across Birmingham
           </p>
         </div>
@@ -569,7 +569,7 @@ const Index = () => {
       {/* Stories */}
       <section className="section-padding bg-muted/60">
         <div className="container mx-auto">
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-deep-purple text-center mb-12">
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-deep-purple text-center mb-8 md:mb-12">
             Community <span className="text-primary">stories</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
