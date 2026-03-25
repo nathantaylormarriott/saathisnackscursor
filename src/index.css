@@ -95,6 +95,16 @@
     overflow-x: clip;
   }
 
+  /* Lenis smooth scroll (same stack as the-big-green-tent-main) */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
   button,
   [role="button"],
   [type="button"] {
@@ -129,10 +139,11 @@
     z-index: 0;
     /* Extend slightly past copy so the feather reads naturally */
     inset: -1.25rem -0.75rem -1.5rem -0.75rem;
-    border-radius: 0;
+    border-radius: 1.25rem;
     background: hsl(var(--background) / 0.06);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    /* Softer falloff avoids a visible seam above the eyebrow line on mobile */
     mask-image: radial-gradient(
       ellipse 82% 88% at 44% 44%,
       #000 0%,
@@ -148,11 +159,39 @@
       transparent 74%
     );
     mask-mode: alpha;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  @media (max-width: 767px) {
+    .home-hero-blur-feather {
+      inset: -2.75rem -0.5rem -1.75rem -0.5rem;
+      border-radius: 1.5rem;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      mask-image: radial-gradient(
+        ellipse 108% 118% at 50% 52%,
+        rgba(0, 0, 0, 0.97) 0%,
+        rgba(0, 0, 0, 0.75) 22%,
+        rgba(0, 0, 0, 0.35) 48%,
+        rgba(0, 0, 0, 0.08) 68%,
+        transparent 88%
+      );
+      -webkit-mask-image: radial-gradient(
+        ellipse 108% 118% at 50% 52%,
+        rgba(0, 0, 0, 0.97) 0%,
+        rgba(0, 0, 0, 0.75) 22%,
+        rgba(0, 0, 0, 0.35) 48%,
+        rgba(0, 0, 0, 0.08) 68%,
+        transparent 88%
+      );
+    }
   }
 
   @media (min-width: 768px) {
     .home-hero-blur-feather {
       inset: -1.75rem -1rem -2rem -1rem;
+      border-radius: 1.25rem;
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
     }
@@ -190,6 +229,11 @@
     box-shadow: 0 6px 28px -4px hsl(0 0% 0% / 0.32);
   }
 
+  /** Full-width primary CTA for equal-height cards (e.g. menu snack boxes) */
+  .btn-primary-pill-block {
+    @apply btn-primary-pill w-full min-h-[48px] justify-center text-base py-3 px-6;
+  }
+
   .btn-outline-pill {
     @apply btn-pill border-2 border-deep-purple text-deep-purple bg-transparent;
   }
@@ -220,9 +264,11 @@
     transition: transform 0.3s ease-out;
   }
 
-  .card-saathi:hover {
-    box-shadow: 8px 8px 0 #4d4846;
-    transform: translate3d(0, -2px, 0);
+  @media (min-width: 768px) {
+    .card-saathi:hover {
+      box-shadow: 8px 8px 0 #4d4846;
+      transform: translate3d(0, -2px, 0);
+    }
   }
 
   .card-saathi-on-sand {
@@ -230,9 +276,11 @@
     transition: transform 0.3s ease-out;
   }
 
-  .card-saathi-on-sand:hover {
-    box-shadow: 8px 8px 0 #4d4846;
-    transform: translate3d(0, -2px, 0);
+  @media (min-width: 768px) {
+    .card-saathi-on-sand:hover {
+      box-shadow: 8px 8px 0 #4d4846;
+      transform: translate3d(0, -2px, 0);
+    }
   }
 
   /** Photo / hero imagery - same mid-century frame as cards, with inset “print” mat */
@@ -279,38 +327,36 @@
     }
   }
 
-  /* GPU-friendly marquee - avoids Framer Motion layout on every frame */
-  .trust-ticker-track {
-    animation: trust-ticker-marquee 72s linear infinite;
-    will-change: transform;
-  }
-
-  @media (min-width: 768px) {
-    .trust-ticker-track {
-      animation-duration: 55s;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .trust-ticker-track {
-      animation: none;
-    }
-  }
-
-  @keyframes trust-ticker-marquee {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-    to {
-      transform: translate3d(-50%, 0, 0);
-    }
-  }
-
   /* Our Story - Mughal divider depth (mustard fill) */
   .our-story-copy-shadow .mughal-divider-shape {
     filter:
       drop-shadow(0 1px 2px hsl(0 0% 0% / 0.28))
       drop-shadow(0 3px 10px hsl(0 0% 0% / 0.18));
+  }
+
+  /* Inner pages — shared hero (Get in Touch–style): taller band + subtle dot grid on deep purple */
+  .page-hero-band {
+    @apply relative overflow-hidden bg-deep-purple text-deep-purple-foreground px-4 md:px-8;
+    @apply py-12 md:py-14 lg:py-16;
+  }
+
+  .page-hero-band::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      circle at center,
+      hsl(0 0% 100% / 0.11) 1.25px,
+      transparent 1.25px
+    );
+    background-size: 20px 20px;
+    pointer-events: none;
+  }
+
+  /* Long titles / copy never force horizontal scroll on narrow viewports */
+  .page-hero-band h1,
+  .page-hero-band p {
+    @apply break-words;
   }
 
   /* Contact page - circle mesh fills the full content section (below hero; cards + form + map) */

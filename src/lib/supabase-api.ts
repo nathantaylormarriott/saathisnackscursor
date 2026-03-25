@@ -2,7 +2,6 @@ import { INITIAL_BLOG_POSTS } from "@/data/content";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import type { BlogPost, ContentBlock, PillTheme } from "@/types/blog";
 import type { EnquiryRecord } from "@/types/enquiry";
-import * as XLSX from "xlsx";
 
 type BlogRow = {
   id: string;
@@ -132,20 +131,4 @@ export async function insertEnquiry(input: Omit<EnquiryRecord, "id" | "submitted
     message: input.message,
   });
   return { error: error ?? null };
-}
-
-/** Excel workbook (.xlsx) for enquiries — opens cleanly in Excel / Numbers / Sheets. */
-export function exportEnquiriesToXlsxBlob(rows: EnquiryRecord[]): Blob {
-  const header = ["Submitted", "Name", "Email", "Phone", "Enquiry type", "Message"] as const;
-  const aoa: string[][] = [
-    [...header],
-    ...rows.map((r) => [r.submittedAt, r.name, r.email, r.phone, r.enquiryType, r.message]),
-  ];
-  const ws = XLSX.utils.aoa_to_sheet(aoa);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Enquiries");
-  const buf = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-  return new Blob([buf], {
-    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  });
 }

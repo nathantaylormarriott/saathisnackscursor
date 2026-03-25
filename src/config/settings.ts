@@ -14,7 +14,7 @@ export const SITE_CONFIG = {
   
   // TODO: Update with real collection point before launch
   collectionNote:
-    "Collection point and timing are agreed after we reply to your enquiry. Advance notice required. We don’t take payments on the website.",
+    "We’ll confirm where and when to collect when we reply to your enquiry—please allow advance notice. Payment isn’t taken on this website.",
   
   socials: {
     instagram: "https://www.instagram.com/saathihouse",
@@ -43,7 +43,7 @@ export const MENU_ITEMS = {
         { name: "Vegetable Biryani", imageKey: "vegetarian-biriyani" },
         { name: "Vegetable Samosa", imageKey: "samosas" },
         { name: "Pakoras", imageKey: "pakoras" },
-        { name: "Fresh Salad", imageKey: "salad" },
+        { name: "Fresh Salad", imageKey: null },
         { name: "Raita", imageKey: null },
         { name: "Bottled Water", imageKey: null },
       ],
@@ -53,7 +53,7 @@ export const MENU_ITEMS = {
         { name: "Pakoras", imageKey: "pakoras" },
         { name: "Meat Samosa", imageKey: "samosas" },
         { name: "Chicken Kebabs", imageKey: "pakoras" },
-        { name: "Fresh Salad", imageKey: "salad" },
+        { name: "Fresh Salad", imageKey: null },
         { name: "Raita", imageKey: null },
         { name: "Bottled Water", imageKey: null },
       ],
@@ -64,13 +64,11 @@ export const MENU_ITEMS = {
     pricePerPerson: 6,
     items: ["Vegetable Pakoras", "Vegetable Samosas", "Fresh Salad", "Chutney", "Bottled Water"],
     dietary: ["Vegetarian", "Halal"],
-    note: "Available for groups under 25 people",
   },
   meatSnackBox: {
     name: "Meat Snack Box",
     pricePerPerson: 7.5,
     items: ["Meat Samosa", "Chicken Kebabs", "Pakoras", "Fresh Salad", "Chutney", "Bottled Water"],
     dietary: ["Halal"],
-    note: "Available for groups under 25 people",
   },
 };

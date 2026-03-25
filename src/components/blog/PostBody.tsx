@@ -6,14 +6,14 @@ function RenderBlocks({ blocks }: { blocks: ContentBlock[] }) {
       {blocks.map((b, i) => {
         if (b.type === "paragraph") {
           return (
-            <p key={i} className="text-foreground/80 leading-relaxed mb-4">
+            <p key={i} className="text-foreground/80 leading-relaxed mb-4 break-words">
               {b.text}
             </p>
           );
         }
         if (b.type === "subheading") {
           return (
-            <h2 key={i} className="font-display text-2xl font-bold text-deep-purple mt-8 mb-4">
+            <h2 key={i} className="font-display text-2xl font-bold text-deep-purple mt-8 mb-4 break-words">
               {b.text}
             </h2>
           );
@@ -24,7 +24,7 @@ function RenderBlocks({ blocks }: { blocks: ContentBlock[] }) {
               <img
                 src={b.src}
                 alt={b.alt || ""}
-                className="w-full max-h-[520px] rounded-2xl object-cover"
+                className="h-auto w-full max-w-full max-h-[min(520px,80vh)] rounded-2xl object-cover"
                 loading="lazy"
               />
             </figure>

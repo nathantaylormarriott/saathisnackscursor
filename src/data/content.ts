@@ -1,4 +1,4 @@
-import heroBg from "@/assets/snackshero.webp";
+import { blogCover } from "@/lib/site-images";
 import type { BlogPost } from "@/types/blog";
 
 /** Seed posts (also the fallback when no custom posts exist in localStorage) */
@@ -10,7 +10,7 @@ export const INITIAL_BLOG_POSTS: BlogPost[] = [
     excerpt: "Discover how choosing a social enterprise caterer delivers not just incredible food, but tangible community impact that aligns with your organisation's CSR goals.",
     category: "Social Impact",
     date: "2026-02-28",
-    image: heroBg,
+    image: blogCover.corporateLunch,
     content: `
 When your organisation books catering for an event, you're making a statement about your values. More and more businesses are recognising that procurement decisions carry weight beyond the bottom line.
 
@@ -41,7 +41,7 @@ This isn't catering by numbers: it's food made with love, by people who care, fo
     excerpt: "Meet the inspiring women who bring their culinary heritage to every dish, building confidence and community along the way.",
     category: "Community News",
     date: "2026-02-15",
-    image: heroBg,
+    image: blogCover.behindKitchen,
     content: `
 Step into the Saathi Snacks kitchen and you'll find something extraordinary: women from across Birmingham's diverse communities, sharing recipes, building friendships, and creating a thriving social enterprise.
 
@@ -69,7 +69,7 @@ The kitchen becomes a classroom, a community centre, and a launchpad, all at onc
     excerpt: "From employment training to youth programmes, discover how choosing Saathi Snacks creates a ripple effect of positive change across Birmingham.",
     category: "Behind the Scenes",
     date: "2026-01-30",
-    image: heroBg,
+    image: blogCover.biryaniImpact,
     content: `
 Every biryani has a story. At Saathi Snacks, that story extends far beyond the kitchen. It reaches into communities across Birmingham, creating opportunities and changing lives.
 

@@ -39,6 +39,13 @@ create policy "enquiries_insert_anon"
   to anon
   with check (true);
 
+-- Same site may use one browser session for /admin and the contact form (authenticated role).
+drop policy if exists "enquiries_insert_authenticated" on public.enquiries;
+create policy "enquiries_insert_authenticated"
+  on public.enquiries for insert
+  to authenticated
+  with check (true);
+
 -- Enquiries: admins (authenticated) can read
 drop policy if exists "enquiries_select_auth" on public.enquiries;
 create policy "enquiries_select_auth"

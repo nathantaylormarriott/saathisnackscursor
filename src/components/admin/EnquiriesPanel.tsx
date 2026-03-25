@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { useEnquiries } from "@/hooks/use-enquiries";
-import { deleteEnquiryById, exportEnquiriesToXlsxBlob } from "@/lib/supabase-api";
+import { exportEnquiriesToXlsxBlob } from "@/lib/enquiries-xlsx-export";
+import { deleteEnquiryById } from "@/lib/supabase-api";
 import { Download, Inbox, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const EnquiriesPanel = () => {
   const { rows: enquiries, loading, refresh } = useEnquiries();
+  const [exporting, setExporting] = useState(false);
 
   const downloadBlob = (filename: string, blob: Blob) => {
     const url = URL.createObjectURL(blob);
@@ -24,11 +27,22 @@ const EnquiriesPanel = () => {
         </p>
         <button
           type="button"
-          onClick={() => downloadBlob(`enquiries-${Date.now()}.xlsx`, exportEnquiriesToXlsxBlob(enquiries))}
-          className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-2 font-label text-sm font-semibold text-deep-purple hover:bg-muted"
+          disabled={exporting}
+          onClick={async () => {
+            try {
+              setExporting(true);
+              const blob = await exportEnquiriesToXlsxBlob(enquiries);
+              downloadBlob(`enquiries-${Date.now()}.xlsx`, blob);
+            } catch {
+              toast.error("Could not build the Excel file. Try again.");
+            } finally {
+              setExporting(false);
+            }
+          }}
+          className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-2 font-label text-sm font-semibold text-deep-purple hover:bg-muted disabled:opacity-50"
         >
           <Download size={16} />
-          Download Excel
+          {exporting ? "Preparing…" : "Download Excel"}
         </button>
       </div>
 

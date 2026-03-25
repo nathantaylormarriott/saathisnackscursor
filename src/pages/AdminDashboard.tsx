@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
+import SeoHead from "@/components/SeoHead";
+import { SEO } from "@/lib/seo";
 import EnquiriesPanel from "@/components/admin/EnquiriesPanel";
 import BlogManager from "@/components/admin/BlogManager";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -42,15 +44,20 @@ const AdminDashboard = () => {
 
   if (!ready) {
     return (
-      <div className="min-h-[calc(100dvh-var(--nav-height))] flex items-center justify-center bg-deep-purple px-4">
-        <p className="font-body text-white/80">Loading…</p>
-      </div>
+      <>
+        <SeoHead title={SEO.admin.title} description={SEO.admin.description} noindex />
+        <div className="min-h-[calc(100dvh-var(--nav-height))] flex items-center justify-center bg-deep-purple px-4">
+          <p className="font-body text-white/80">Loading…</p>
+        </div>
+      </>
     );
   }
 
   if (!session) {
     return (
-      <div className="min-h-[calc(100dvh-var(--nav-height))] flex flex-col items-center justify-center bg-deep-purple px-4 py-16">
+      <>
+        <SeoHead title={SEO.admin.title} description={SEO.admin.description} noindex />
+        <div className="min-h-[calc(100dvh-var(--nav-height))] flex flex-col items-center justify-center bg-deep-purple px-4 py-16">
         <div className="w-full max-w-md rounded-2xl border border-white/15 bg-white/5 p-8 backdrop-blur-sm">
           <h1 className="font-display text-2xl font-bold text-white mb-2 text-center">Admin</h1>
           <p className="font-body text-sm text-white/70 text-center mb-6">Sign in with your Supabase user email and password.</p>
@@ -91,15 +98,17 @@ const AdminDashboard = () => {
           </form>
         </div>
       </div>
+      </>
     );
   }
 
   return (
     <Layout hideFooter>
+      <SeoHead title={SEO.admin.title} description={SEO.admin.description} noindex />
       <section className="section-padding bg-background min-h-[60vh]">
-        <div className="container mx-auto max-w-5xl">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-            <h1 className="font-display text-3xl md:text-4xl font-bold text-deep-purple">
+        <div className="container mx-auto max-w-5xl min-w-0">
+          <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between mb-8">
+            <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-deep-purple break-words">
               Site <span className="text-primary">admin</span>
             </h1>
             <button
@@ -109,21 +118,27 @@ const AdminDashboard = () => {
                 setSession(null);
                 toast.success("Signed out");
               }}
-              className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2 font-label text-sm font-semibold text-deep-purple hover:bg-muted"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-border px-4 py-2.5 font-label text-sm font-semibold text-deep-purple hover:bg-muted min-h-[44px] w-full sm:w-auto"
             >
               <LogOut size={16} />
               Sign out
             </button>
           </div>
 
-          <Tabs defaultValue="enquiries" className="w-full">
-            <TabsList className="grid w-full max-w-md grid-cols-2 mb-8 h-auto p-1">
-              <TabsTrigger value="enquiries" className="gap-2 py-3 data-[state=active]:text-deep-purple">
-                <Inbox size={18} />
+          <Tabs defaultValue="enquiries" className="w-full min-w-0">
+            <TabsList className="grid w-full max-w-full sm:max-w-md grid-cols-2 mb-8 h-auto p-1 gap-1">
+              <TabsTrigger
+                value="enquiries"
+                className="gap-1.5 py-3 px-2 text-xs sm:text-sm sm:gap-2 sm:px-3 data-[state=active]:text-deep-purple"
+              >
+                <Inbox size={18} className="shrink-0" />
                 Enquiries
               </TabsTrigger>
-              <TabsTrigger value="blog" className="gap-2 py-3 data-[state=active]:text-deep-purple">
-                <BookOpen size={18} />
+              <TabsTrigger
+                value="blog"
+                className="gap-1.5 py-3 px-2 text-xs sm:text-sm sm:gap-2 sm:px-3 data-[state=active]:text-deep-purple"
+              >
+                <BookOpen size={18} className="shrink-0" />
                 Stories
               </TabsTrigger>
             </TabsList>

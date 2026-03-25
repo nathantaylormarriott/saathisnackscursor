@@ -1,56 +1,73 @@
-import { useState, useEffect, useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ChefHat, Users, Heart, Star, ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
+import SeoHead from "@/components/SeoHead";
+import { organizationJsonLd, SEO } from "@/lib/seo";
+import { FadeUp } from "@/components/FadeUp";
 import { ShinyCtaLink } from "@/components/ui/shiny-cta-link";
 import MughalDivider from "@/components/MughalDivider";
 import SpotlightCard from "@/components/SpotlightCard";
-import heroBgLight from "@/assets/saathisnacksherolight.webp";
-import snacksHeroPlaceholder from "@/assets/snackshero.webp";
-import biryaniImg from "@/assets/biryani.webp";
-import ourStoryImg from "@/assets/ourstorysection.webp";
-import saladImg from "@/assets/salad.webp";
-import kitchenImg from "@/assets/kitchen.webp";
+import { OurStoryTrustTicker } from "@/components/OurStoryTrustTicker";
+import { SITE_IMAGES, menuPreview } from "@/lib/site-images";
 import { testimonials } from "@/data/content";
 import { useBlogPosts } from "@/hooks/use-blog-posts";
 import { storyPillClassForPost } from "@/lib/blog-utils";
+import { fadeUp, fadeUpEase } from "@/lib/motion";
 
 const MENU_PREVIEW_ITEMS = [
   {
-    image: snacksHeroPlaceholder,
-    imageAlt: "Vegetable samosas, crispy pastry with spiced vegetables",
-    name: "Vegetable Samosas",
-    detail: "Party boxes & grazing tables",
-    description: "Crispy pastry parcels filled with spiced seasonal vegetables.",
-    price: "From £6/box",
-    bullets: ["Hand-folded pastry", "Chutney paired to order"],
-    badges: [
-      { label: "Vegetarian", className: "bg-green-500/15 text-green-700" },
-      { label: "Halal", className: "bg-primary/15 text-primary" },
-    ],
-  },
-  {
-    image: biryaniImg,
-    imageAlt: "Chicken biryani, fragrant rice with spiced chicken",
-    name: "Chicken Biryani",
-    detail: "Lunch spreads for teams & events",
-    description: "Fragrant basmati rice layered with tender spiced chicken.",
-    price: "From £375/25 people",
-    bullets: ["Choose mains & starters", "Salad, raita & water included"],
-    badges: [{ label: "Halal", className: "bg-primary/15 text-primary" }],
-  },
-  {
-    image: saladImg,
-    imageAlt: "Snack box selection: samosas, pakoras, salad and chutney",
-    name: "Snack Box",
-    detail: "Per-person boxes for smaller groups",
-    description: "A curated selection of samosas, pakoras, salad and chutney.",
-    price: "From £6/person",
-    bullets: ["Ideal under 25 guests", "Mix of veg & halal options"],
+    image: menuPreview.samosas,
+    imageAlt: "Samosas — meat and vegetable options",
+    name: "Samosas",
+    detail: "Meat and vegetable available",
+    description: "Crispy pastry parcels with spiced fillings — perfect for parties, grazing tables, and events.",
+    price: "",
+    bullets: ["Hand-folded", "Chutney paired to order"],
     badges: [
       { label: "Vegetarian option", className: "bg-green-500/15 text-green-700" },
       { label: "Halal", className: "bg-primary/15 text-primary" },
     ],
+  },
+  {
+    image: menuPreview.pakoras,
+    imageAlt: "Vegetable pakoras",
+    name: "Vegetable Pakoras",
+    detail: "Crispy & fresh",
+    description: "Seasonal vegetables in spiced gram flour batter, fried fresh for every order.",
+    price: "",
+    bullets: ["Great as a starter", "Works alongside any spread"],
+    badges: [{ label: "Vegetarian", className: "bg-green-500/15 text-green-700" }],
+  },
+  {
+    image: menuPreview.biryani,
+    imageAlt: "Biryani — fragrant rice with spiced mains",
+    name: "Biryani",
+    detail: "Lunch spreads & larger gatherings",
+    description: "Fragrant basmati layered with your choice of mains — ideal when you need to feed a crowd.",
+    price: "",
+    bullets: ["Choose mains & starters", "Salad, raita & water included"],
+    badges: [{ label: "Halal", className: "bg-primary/15 text-primary" }],
+  },
+  {
+    image: menuPreview.chickenKebabs,
+    imageAlt: "Chicken kebabs",
+    name: "Chicken Kebabs",
+    detail: "Starters & sides",
+    description: "Tender spiced chicken skewers — excellent as a starter or alongside biryani and sides.",
+    price: "",
+    bullets: ["Rich in flavour", "Made fresh"],
+    badges: [{ label: "Halal", className: "bg-primary/15 text-primary" }],
+  },
+  {
+    image: menuPreview.saladsRaita,
+    imageAlt: "Fresh salad and raita",
+    name: "Fresh Salads & Raita",
+    detail: "Balance every spread",
+    description: "Fresh salad, cooling raita, and chutneys to round out your catering order.",
+    price: "",
+    bullets: ["Included on larger packages", "Ask when you enquire"],
+    badges: [{ label: "Vegetarian", className: "bg-green-500/15 text-green-700" }],
   },
 ] as const;
 
@@ -65,33 +82,18 @@ const TRUST_TICKER_ITEMS = [
 
 const Index = () => {
   const { posts: blogPosts, loading: blogLoading } = useBlogPosts();
-  const menuPreviewRef = useRef<HTMLDivElement>(null);
-  const [menuPreviewVisible, setMenuPreviewVisible] = useState(false);
-
-  useEffect(() => {
-    const el = menuPreviewRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setMenuPreviewVisible(true);
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <Layout>
+      <SeoHead title={SEO.home.title} description={SEO.home.description} jsonLd={organizationJsonLd()} />
       {/* Hero - soft sand scrims; copy uses same container + horizontal padding as Navbar for logo alignment */}
       <section className="relative flex flex-col overflow-hidden bg-background">
         <div className="relative flex min-h-[calc(100dvh-var(--nav-height))] w-full items-center">
-          <div
-            className="pointer-events-none absolute inset-x-0 top-[-12%] z-0 h-[124%] w-full"
-            aria-hidden
-          >
+          {/* inset-0 only — no negative top / tall % height, or imagery bleeds below this block and sits behind the Our Story ticker */}
+          <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
             <img
-              src={heroBgLight}
+              src={SITE_IMAGES.homeHero}
               alt=""
               className="absolute inset-0 h-full w-full object-cover object-center"
               loading="eager"
@@ -113,25 +115,45 @@ const Index = () => {
               <div className="relative isolate max-w-2xl">
                 <div className="home-hero-blur-feather" aria-hidden />
                 <div className="relative z-[1] home-hero-copy">
-                  <p className="text-mustard text-xs font-semibold uppercase tracking-widest mb-3 block sm:text-sm">
+                  <motion.p
+                    className="font-body text-xs font-semibold uppercase tracking-widest mb-3 block text-foreground/90 sm:text-sm"
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+                    animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2, ease: fadeUpEase }}
+                  >
                     Birmingham&apos;s social enterprise caterer
-                  </p>
-                  <h1 className="font-display text-[2.25rem] leading-[1.12] sm:text-5xl md:text-6xl lg:text-7xl font-bold text-deep-purple mb-5 sm:mb-6 sm:leading-tight">
+                  </motion.p>
+                  <motion.h1
+                    className="font-display text-5xl leading-[1.08] md:text-6xl lg:text-7xl font-bold text-deep-purple mb-5 sm:mb-6 sm:leading-tight"
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+                    animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3, ease: fadeUpEase }}
+                  >
                     Catering That
                     <br />
                     <span className="text-primary">Does More</span>
-                  </h1>
-                  <p className="hero-lead font-body text-base leading-relaxed sm:text-lg mb-7 max-w-lg text-foreground/90 sm:mb-8">
+                  </motion.h1>
+                  <motion.p
+                    className="hero-lead font-body text-base leading-relaxed sm:text-lg mb-7 max-w-lg text-foreground/90 sm:mb-8"
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 15 }}
+                    animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                    transition={{ duration: 0.65, delay: 0.42, ease: fadeUpEase }}
+                  >
                     Fresh, authentic South Asian food for your group events, team lunches, and community gatherings, collected from Birmingham, made with heart. Every order supports women building brighter futures.
-                  </p>
-                  <div>
+                  </motion.p>
+                  <motion.div
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 15 }}
+                    animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                    transition={{ duration: 0.65, delay: 0.52, ease: fadeUpEase }}
+                    className="inline-block w-full max-w-[min(100%,18rem)] sm:max-w-none sm:w-auto"
+                  >
                     <Link
                       to="/menu"
-                      className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 font-label font-semibold text-primary-foreground shadow-[var(--shadow-pink)] transition-[transform,colors,box-shadow] duration-300 hover:scale-[1.02] hover:bg-mustard hover:text-white active:scale-[0.98] sm:w-auto"
+                      className="inline-flex min-h-[40px] w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-label font-semibold text-primary-foreground shadow-[var(--shadow-pink)] transition-[transform,colors,box-shadow] duration-300 hover:scale-[1.02] hover:bg-mustard hover:text-white active:scale-[0.98] sm:min-h-[44px] sm:w-auto sm:rounded-2xl sm:px-6 sm:py-3 sm:text-base"
                     >
                       View Our Menu
                     </Link>
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             </div>
@@ -139,28 +161,21 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Our Story - warm cream (same as hero) */}
-      <section className="bg-background overflow-hidden px-0 pb-16 md:pb-28 lg:pb-32">
+      {/* Our Story - warm cream (trust strip is first here only — not in hero; hero image is clipped above) */}
+      <section
+        id="our-story"
+        className="relative z-[2] isolate bg-background overflow-hidden px-0 pb-16 md:pb-28 lg:pb-32 border-t border-border/50"
+      >
         <div
-          className="relative z-10 w-full shrink-0 py-6 md:py-7 mb-12 md:mb-16 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]"
+          className="relative z-[2] w-full shrink-0 bg-background py-6 md:py-7 mb-12 md:mb-16 overflow-hidden"
           role="region"
           aria-label="Social impact highlights"
         >
-          <div className="trust-ticker-track flex w-max gap-10 md:gap-14">
-            {[...TRUST_TICKER_ITEMS, ...TRUST_TICKER_ITEMS].map((text, i) => (
-                <span
-                  key={`${text}-${i}`}
-                  className="font-label text-sm text-deep-purple inline-flex shrink-0 items-center gap-2 whitespace-nowrap"
-                >
-                  <Heart size={14} className="shrink-0 text-mustard" fill="currentColor" aria-hidden />
-                  {text}
-                </span>
-              ))}
-          </div>
+          <OurStoryTrustTicker items={TRUST_TICKER_ITEMS} />
         </div>
         <div className="max-w-6xl mx-auto px-4 md:px-8">
           <div className="flex flex-col md:flex-row gap-10 md:gap-12 lg:gap-14 items-stretch">
-            <div className="our-story-copy-shadow md:flex-1 order-2 md:order-1 flex flex-col justify-center">
+            <FadeUp className="our-story-copy-shadow md:flex-1 order-2 md:order-1 flex flex-col justify-center">
               <h2 className="font-display text-4xl md:text-5xl font-semibold mb-4 text-left opacity-100">
                 <span className="text-deep-purple">Our</span>{" "}
                 <span className="text-primary">story</span>
@@ -189,13 +204,13 @@ const Index = () => {
                   </ShinyCtaLink>
                 </div>
               </div>
-            </div>
-            <div className="md:flex-1 order-1 md:order-2 flex items-center justify-center">
+            </FadeUp>
+            <FadeUp className="md:flex-1 order-1 md:order-2 flex items-center justify-center" delay={0.12}>
               <div className="aspect-square w-full max-w-md md:max-w-lg">
-                <div className="midcentury-photo-frame h-full w-full transition-transform duration-300 ease-out hover:shadow-[8px_8px_0_#4D4846] hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-[6px_6px_0_#4D4846]">
+                <div className="midcentury-photo-frame h-full w-full transition-transform duration-300 ease-out md:hover:shadow-[8px_8px_0_#4D4846] md:hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:md:hover:translate-y-0 motion-reduce:md:hover:shadow-[6px_6px_0_#4D4846]">
                   <div className="midcentury-photo-frame-inner">
                     <img
-                      src={ourStoryImg}
+                      src={SITE_IMAGES.ourStory}
                       alt="Cooking together at Saathi Snacks"
                       className="h-full w-full object-cover"
                       loading="lazy"
@@ -203,13 +218,13 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </FadeUp>
           </div>
         </div>
       </section>
 
-      {/* Menu preview — title scrolls in normal flow; cards stack under navbar only */}
-      <section className="relative scroll-mt-[var(--nav-sticky-offset)] bg-deep-purple pt-0 pb-20 md:pb-28">
+      {/* Menu preview — same vertical rhythm as “Why People choose us” (section-padding + header / divider / mt-8) */}
+      <section className="section-padding relative scroll-mt-[var(--nav-sticky-offset)] bg-deep-purple">
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
           <div
             className="absolute inset-0 opacity-[0.14]"
@@ -221,38 +236,46 @@ const Index = () => {
           />
         </div>
         <div className="container relative z-10 mx-auto px-4 md:px-8">
-          <div ref={menuPreviewRef} className="relative mx-auto max-w-6xl">
-            <div className="pb-6 pt-12 text-center md:pt-14">
+          <div className="relative mx-auto max-w-6xl">
+            <FadeUp className="text-center mb-4">
               <h2 className="font-display text-4xl md:text-5xl font-bold mb-2 drop-shadow-sm">
                 <span className="text-white">A Taste of Our</span>{" "}
                 <span className="text-primary">Menu</span>
               </h2>
-              <p className="font-body text-lg md:text-xl text-white/85 mb-6 max-w-2xl mx-auto drop-shadow-sm">
+              <p className="font-body text-lg md:text-xl text-white/85 max-w-2xl mx-auto drop-shadow-sm">
                 Fresh, authentic South Asian food, made by our community, for yours.
               </p>
-              <MughalDivider />
-            </div>
+              <p className="font-body text-base md:text-lg text-white/80 max-w-3xl mx-auto mt-5 leading-relaxed drop-shadow-sm">
+                We offer flexible catering packages for small and large groups, and we are happy to discuss bespoke menu
+                options to suit your event.
+              </p>
+            </FadeUp>
+            <FadeUp className="flex justify-center" delay={0.08}>
+              <MughalDivider className="pb-6" />
+            </FadeUp>
+            <div className="mt-8 space-y-6 sm:space-y-8 md:space-y-10">
             {MENU_PREVIEW_ITEMS.map((item, i) => (
-              <div key={item.name} className="mb-6 sm:mb-8 md:mb-10">
-                <div
-                  className={
-                    menuPreviewVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                  }
-                  style={{
-                    transition: "opacity 700ms ease-out, transform 700ms ease-out",
-                    transitionDelay: menuPreviewVisible ? `${i * 100}ms` : "0ms",
-                  }}
+              <motion.div
+                key={item.name}
+                className="w-full min-w-0"
+                initial={prefersReducedMotion ? false : fadeUp.initial}
+                whileInView={prefersReducedMotion ? undefined : fadeUp.whileInView}
+                viewport={fadeUp.viewport}
+                transition={{
+                  ...fadeUp.transition,
+                  delay: i * 0.08,
+                }}
+              >
+                <Link
+                  to="/menu"
+                  className="group card-midcentury flex h-full min-h-0 flex-col overflow-hidden transition-transform duration-300 ease-out md:hover:-translate-y-1 md:hover:shadow-[8px_8px_0_#4D4846] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-deep-purple motion-reduce:transition-none motion-reduce:md:hover:translate-y-0 motion-reduce:md:hover:shadow-[6px_6px_0_#4D4846] md:flex-row"
                 >
-                  <Link
-                    to="/menu"
-                    className="group card-midcentury flex h-full min-h-0 flex-col overflow-hidden transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-[8px_8px_0_#4D4846] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-deep-purple motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-[6px_6px_0_#4D4846] md:flex-row"
-                  >
                     <div className="relative h-[200px] w-full shrink-0 overflow-hidden md:h-auto md:min-h-[260px] md:w-[min(42%,280px)]">
                       <div className="relative h-full min-h-[200px] w-full md:min-h-[260px]">
                         <img
                           src={item.image}
                           alt={item.imageAlt}
-                          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                          className="h-full w-full object-cover transition-transform duration-500 ease-out md:group-hover:scale-[1.03]"
                           loading="lazy"
                         />
                         <div
@@ -262,63 +285,54 @@ const Index = () => {
                       </div>
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col p-5 text-left sm:p-6 md:py-7 md:pl-8 md:pr-7">
-                      <div className="flex gap-4 sm:gap-5">
-                        <span
-                          className="font-display text-4xl font-bold tabular-nums leading-none text-[#EBB035] sm:text-5xl"
-                          aria-hidden
-                        >
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <div className="flex min-w-0 flex-1 flex-col">
-                          <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                            <h3 className="font-display text-xl font-bold text-foreground sm:text-2xl">
-                              {item.name}
-                            </h3>
+                      <div className="flex min-w-0 flex-1 flex-col">
+                        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                          <h3 className="font-display text-xl font-bold text-foreground sm:text-2xl">{item.name}</h3>
+                          {item.price ? (
                             <p className="shrink-0 font-display text-lg font-bold text-primary sm:text-xl">
                               {item.price}
                             </p>
-                          </div>
-                          <p className="font-label text-xs font-semibold uppercase tracking-wide text-deep-purple/70">
-                            {item.detail}
-                          </p>
-                          <p className="mt-2 font-body text-sm leading-relaxed text-foreground/90 sm:text-base">
-                            {item.description}
-                          </p>
-                          <ul className="mt-3 space-y-1.5 border-l-2 border-[#EBB035]/50 pl-3 font-body text-xs text-[#4D4846]/90 sm:text-sm">
-                            {item.bullets.map((line) => (
-                              <li key={line}>{line}</li>
-                            ))}
-                          </ul>
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            {item.badges.map((b) => (
-                              <span
-                                key={b.label}
-                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${b.className}`}
-                              >
-                                {b.label}
-                              </span>
-                            ))}
-                          </div>
-                          <div className="mt-auto flex items-center justify-between gap-3 pt-4">
-                            <span className="font-label text-xs font-semibold uppercase tracking-wide text-deep-purple/75">
-                              View packages & pricing
+                          ) : null}
+                        </div>
+                        <p className="font-label text-xs font-semibold uppercase tracking-wide text-deep-purple/70">
+                          {item.detail}
+                        </p>
+                        <p className="mt-2 font-body text-sm leading-relaxed text-foreground/90 sm:text-base">
+                          {item.description}
+                        </p>
+                        <ul className="mt-3 space-y-1.5 border-l-2 border-[#EBB035]/50 pl-3 font-body text-xs text-[#4D4846]/90 sm:text-sm">
+                          {item.bullets.map((line) => (
+                            <li key={line}>{line}</li>
+                          ))}
+                        </ul>
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {item.badges.map((b) => (
+                            <span
+                              key={b.label}
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${b.className}`}
+                            >
+                              {b.label}
                             </span>
-                            <ArrowRight
-                              size={20}
-                              strokeWidth={2.25}
-                              className="shrink-0 text-[#EBB035] transition-transform duration-300 group-hover:translate-x-1"
-                              aria-hidden
-                            />
-                          </div>
+                          ))}
+                        </div>
+                        <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+                          <span className="font-label text-xs font-semibold uppercase tracking-wide text-deep-purple/75">
+                            View packages & pricing
+                          </span>
+                          <ArrowRight
+                            size={20}
+                            strokeWidth={2.25}
+                            className="shrink-0 text-[#EBB035] transition-transform duration-300 md:group-hover:translate-x-1"
+                            aria-hidden
+                          />
                         </div>
                       </div>
                     </div>
-                  </Link>
-                </div>
-              </div>
+                </Link>
+              </motion.div>
             ))}
-            <div className="h-20 sm:h-28 md:h-36" aria-hidden />
-            <div className="mt-10 text-center">
+            </div>
+            <FadeUp className="mt-10 w-full text-center md:mt-12" delay={0.15}>
               <Link
                 to="/menu"
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-label font-semibold text-sm tracking-wide text-deep-purple shadow-md transition-[transform,colors,box-shadow] duration-300 hover:scale-[1.02] hover:bg-mustard hover:text-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-deep-purple"
@@ -326,7 +340,7 @@ const Index = () => {
                 View our menu and packages
                 <ArrowRight size={18} strokeWidth={2.25} aria-hidden />
               </Link>
-            </div>
+            </FadeUp>
           </div>
         </div>
       </section>
@@ -334,11 +348,15 @@ const Index = () => {
       {/* Why People Choose Us - soft sand + per-card coral / apricot / pink */}
       <section className="section-padding bg-[#FDEBD3]">
         <div className="container mx-auto px-4 md:px-8">
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-center mb-4">
-            <span className="text-[#2C7B65]">Why People</span>{" "}
-            <span className="text-[#EF727F]">choose us</span>
-          </h2>
-          <MughalDivider />
+          <FadeUp className="text-center mb-4">
+            <h2 className="font-display text-4xl md:text-5xl font-bold">
+              <span className="text-[#2C7B65]">Why People</span>{" "}
+              <span className="text-[#EF727F]">choose us</span>
+            </h2>
+          </FadeUp>
+          <FadeUp className="flex justify-center" delay={0.08}>
+            <MughalDivider />
+          </FadeUp>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8 max-w-7xl mx-auto">
             {[
               {
@@ -351,7 +369,7 @@ const Index = () => {
                 icon: Users,
                 title: "Flexible Packages for Any Group Size",
                 desc: "From intimate team meetings to large events, we have a package that fits your needs and budget.",
-                iconWrap: "bg-[#F8C697] text-white shadow-[0_4px_14px_-4px_rgba(77,72,70,0.32)]",
+                iconWrap: "bg-[#EF727F] text-white shadow-[0_4px_14px_-4px_rgba(77,72,70,0.32)]",
               },
               {
                 icon: Heart,
@@ -359,21 +377,20 @@ const Index = () => {
                 desc: "Every pound spent directly funds employment training, wellbeing workshops, and youth programmes in Birmingham.",
                 iconWrap: "bg-[#EF727F] text-white shadow-[0_4px_14px_-4px_rgba(77,72,70,0.32)]",
               },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="card-midcentury-on-sand text-center h-full min-w-0 p-6 md:p-7 transition-transform duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[8px_8px_0_#4D4846] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-[6px_6px_0_#4D4846]"
-              >
-                <div
-                  className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 ${item.iconWrap}`}
-                >
-                  <item.icon size={28} strokeWidth={2} fill="white" stroke="white" />
+            ].map((item, i) => (
+              <FadeUp key={item.title} className="h-full min-w-0" delay={0.12 + i * 0.1}>
+                <div className="card-midcentury-on-sand text-center h-full min-w-0 p-6 md:p-7 transition-transform duration-300 ease-out md:hover:-translate-y-0.5 md:hover:shadow-[8px_8px_0_#4D4846] motion-reduce:transition-none motion-reduce:md:hover:translate-y-0 motion-reduce:md:hover:shadow-[6px_6px_0_#4D4846]">
+                  <div
+                    className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 ${item.iconWrap}`}
+                  >
+                    <item.icon size={28} strokeWidth={2} fill="white" stroke="white" />
+                  </div>
+                  <h3 className="font-display text-lg sm:text-xl font-semibold text-[#2C7B65] mb-3 leading-tight tracking-tight">
+                    {item.title}
+                  </h3>
+                  <p className="font-body text-sm text-[#4D4846] leading-relaxed">{item.desc}</p>
                 </div>
-                <h3 className="font-display text-lg sm:text-xl font-semibold text-[#2C7B65] mb-3 leading-tight tracking-tight xl:whitespace-nowrap">
-                  {item.title}
-                </h3>
-                <p className="font-body text-sm text-[#4D4846] leading-relaxed">{item.desc}</p>
-              </div>
+              </FadeUp>
             ))}
           </div>
         </div>
@@ -405,7 +422,7 @@ const Index = () => {
           />
         </div>
         <div className="container relative z-10 mx-auto max-w-6xl px-4 md:px-8">
-          <div className="mb-8 text-center">
+          <FadeUp className="text-center mb-4">
             <h2
               id="how-it-works-heading"
               className="font-display text-4xl font-bold text-[#FDEBD3] md:text-5xl mb-4 drop-shadow-sm"
@@ -416,8 +433,8 @@ const Index = () => {
               From browse to collection: three simple steps. We&apos;re here to help you plan snacks
               that work for your crowd.
             </p>
-          </div>
-          <div className="relative mx-auto max-w-3xl">
+          </FadeUp>
+          <div className="relative mx-auto max-w-3xl mt-8 space-y-6 sm:space-y-8 md:space-y-10">
             {(
               [
                 {
@@ -436,18 +453,18 @@ const Index = () => {
                   desc: "We'll check availability and agree collection in Birmingham with you before anything is confirmed, so there are no clashes or surprises.",
                 },
               ] as const
-            ).map((item) => (
-              <div key={item.step} className="mb-6 sm:mb-8 md:mb-10">
-                <div className="card-midcentury group relative overflow-hidden p-5 text-left transition-transform duration-300 ease-out sm:p-6 md:p-7 hover:-translate-y-0.5 hover:shadow-[8px_8px_0_#4D4846] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-[6px_6px_0_#4D4846]">
-                  <div className="max-w-[95%]">
+            ).map((item, i) => (
+              <FadeUp key={item.step} className="w-full min-w-0" delay={i * 0.1}>
+                <div className="card-midcentury group relative overflow-hidden p-5 text-left transition-transform duration-300 ease-out sm:p-6 md:p-7 md:hover:-translate-y-0.5 md:hover:shadow-[8px_8px_0_#4D4846] motion-reduce:transition-none motion-reduce:md:hover:translate-y-0 motion-reduce:md:hover:shadow-[6px_6px_0_#4D4846]">
+                  <div className="w-full">
                     <div className="mb-3 flex flex-wrap items-center gap-2.5">
                       <div
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary font-display text-base font-bold tabular-nums text-primary-foreground shadow-[0_4px_14px_-4px_rgba(77,72,70,0.28)] sm:h-11 sm:w-11 sm:text-lg"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-mustard font-display text-base font-bold tabular-nums text-white shadow-[0_4px_14px_-4px_rgba(77,72,70,0.28)] sm:h-11 sm:w-11 sm:text-lg"
                         aria-hidden
                       >
                         {item.step}
                       </div>
-                      <h3 className="font-display min-w-0 text-lg font-bold leading-snug text-[#2C7B65] sm:text-xl md:text-2xl">
+                      <h3 className="font-display min-w-0 text-lg font-bold leading-snug text-primary sm:text-xl md:text-2xl">
                         {item.title}
                       </h3>
                     </div>
@@ -456,22 +473,23 @@ const Index = () => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </FadeUp>
             ))}
-            <div className="h-20 sm:h-28 md:h-36" aria-hidden />
           </div>
         </div>
       </section>
 
       {/* Testimonials */}
       <section className="section-padding bg-background text-foreground">
-        <div className="container mx-auto">
-          <h2 className="font-display text-3xl md:text-5xl font-bold text-center mb-8 text-deep-purple md:mb-12">
-            What Our <span className="text-primary">Clients Say</span>
-          </h2>
+        <div className="container mx-auto min-w-0">
+          <FadeUp className="text-center mb-8 text-deep-purple md:mb-12">
+            <h2 className="font-display text-3xl md:text-5xl font-bold">
+              What Our <span className="text-primary">Clients Say</span>
+            </h2>
+          </FadeUp>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {testimonials.map((t) => (
-              <div key={t.id}>
+            {testimonials.map((t, i) => (
+              <FadeUp key={t.id} delay={0.08 + i * 0.1}>
                 <div className="card-midcentury-on-sand h-full p-6">
                   <div className="mb-4 flex gap-1">
                     {[...Array(t.rating)].map((_, j) => (
@@ -486,7 +504,7 @@ const Index = () => {
                     <p className="font-body text-xs text-muted-foreground">{t.role}</p>
                   </div>
                 </div>
-              </div>
+              </FadeUp>
             ))}
           </div>
         </div>
@@ -494,12 +512,12 @@ const Index = () => {
 
       {/* Trust bar */}
       <section className="bg-deep-purple py-7 text-white md:py-8">
-        <div className="container mx-auto flex flex-wrap items-center justify-center gap-3 px-4 text-center">
+        <FadeUp className="container mx-auto flex flex-wrap items-center justify-center gap-3 px-4 text-center">
           <Users className="h-7 w-7 shrink-0 text-mustard md:h-8 md:w-8" strokeWidth={2} aria-hidden />
           <p className="max-w-xl font-display text-base font-semibold leading-snug text-white md:max-w-none md:text-lg lg:text-xl">
             Trusted by charities, businesses, and community organisations across Birmingham
           </p>
-        </div>
+        </FadeUp>
       </section>
 
       {/* Kitchen - dedicated section (above hire CTA strip) */}
@@ -509,12 +527,12 @@ const Index = () => {
       >
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 lg:items-center">
-            <div>
+            <FadeUp>
               <div className="relative aspect-[4/3] w-full lg:aspect-[5/4]">
-                <div className="midcentury-photo-frame absolute inset-0 transition-transform duration-300 ease-out hover:shadow-[8px_8px_0_#4D4846] hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-[6px_6px_0_#4D4846]">
+                <div className="midcentury-photo-frame absolute inset-0 transition-transform duration-300 ease-out md:hover:shadow-[8px_8px_0_#4D4846] md:hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:md:hover:translate-y-0 motion-reduce:md:hover:shadow-[6px_6px_0_#4D4846]">
                   <div className="midcentury-photo-frame-inner">
                     <img
-                      src={kitchenImg}
+                      src={SITE_IMAGES.kitchen}
                       alt="Saathi Snacks community kitchen at Saathi House: bright, modern prep space where meals are made fresh."
                       className="h-full w-full object-cover object-center"
                       loading="lazy"
@@ -523,8 +541,8 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div>
+            </FadeUp>
+            <FadeUp delay={0.12}>
               <p className="font-label text-sm font-semibold uppercase tracking-widest text-deep-purple/75 mb-3">
                 The heart of Saathi Snacks
               </p>
@@ -546,14 +564,14 @@ const Index = () => {
                 From spices and prep to packing and handover, everything passes through here, so you can taste the care
                 in every bite.
               </p>
-            </div>
+            </FadeUp>
           </div>
         </div>
       </section>
 
       {/* Kitchen hire - purple strip; pink on CTA only */}
       <section className="py-12 px-4 bg-deep-purple">
-        <div className="max-w-2xl mx-auto text-center">
+        <FadeUp className="max-w-2xl mx-auto text-center">
           <h2 className="text-white font-display text-2xl md:text-3xl font-bold mb-2">
             Need a kitchen space?
           </h2>
@@ -566,31 +584,33 @@ const Index = () => {
           >
             Get in touch →
           </Link>
-        </div>
+        </FadeUp>
       </section>
 
       {/* Stories */}
       <section className="section-padding bg-muted/60">
-        <div className="container mx-auto">
-          <h2 className="font-display text-3xl md:text-5xl font-bold text-deep-purple text-center mb-8 md:mb-12">
-            Community <span className="text-primary">stories</span>
-          </h2>
+        <div className="container mx-auto min-w-0">
+          <FadeUp className="text-center mb-8 md:mb-12">
+            <h2 className="font-display text-3xl md:text-5xl font-bold text-deep-purple">
+              Community <span className="text-primary">stories</span>
+            </h2>
+          </FadeUp>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {blogLoading ? (
               <p className="col-span-full text-center font-body text-muted-foreground">Loading stories…</p>
             ) : null}
             {!blogLoading &&
               blogPosts.map((post, i) => (
-              <div key={post.slug}>
+              <FadeUp key={post.slug} className="h-full min-w-0" delay={i * 0.1}>
                 <Link to={`/blog/${post.slug}`} className="group block h-full">
                   <SpotlightCard
                     onSand
                     spotlightColor="rgba(82, 18, 108, 0.08)"
-                    className="h-full transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_#4D4846] motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:shadow-[6px_6px_0_#4D4846]"
+                    className="h-full transition-transform duration-300 ease-out md:group-hover:-translate-y-1 md:group-hover:shadow-[8px_8px_0_#4D4846] motion-reduce:transition-none motion-reduce:md:group-hover:translate-y-0 motion-reduce:md:group-hover:shadow-[6px_6px_0_#4D4846]"
                   >
                     {post.image && (
                       <div className="h-48 rounded-xl overflow-hidden mb-4 -mx-2 -mt-2">
-                        <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                        <img src={post.image} alt={post.title} className="w-full h-full object-cover md:group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                       </div>
                     )}
                     <span
@@ -598,17 +618,17 @@ const Index = () => {
                     >
                       {post.category}
                     </span>
-                    <h3 className="font-display text-lg font-semibold text-deep-purple mt-2 mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="font-display text-lg font-semibold text-deep-purple mt-2 mb-2 md:group-hover:text-primary transition-colors">
                       {post.title}
                     </h3>
                     <p className="font-body text-sm text-muted-foreground mb-3 line-clamp-2">{post.excerpt}</p>
                     <span className="font-label text-xs text-muted-foreground">{post.date}</span>
                   </SpotlightCard>
                 </Link>
-              </div>
+              </FadeUp>
             ))}
           </div>
-          <div className="text-center mt-10">
+          <FadeUp className="text-center mt-10" delay={0.12}>
             <Link
               to="/blog"
               className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-label font-semibold px-6 py-3 rounded-2xl shadow-[var(--shadow-pink)] transition-[transform,colors,box-shadow] duration-300 hover:scale-[1.02] hover:bg-mustard hover:text-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-muted"
@@ -616,7 +636,7 @@ const Index = () => {
               View all our stories
               <ArrowRight size={18} strokeWidth={2.25} aria-hidden />
             </Link>
-          </div>
+          </FadeUp>
         </div>
       </section>
     </Layout>

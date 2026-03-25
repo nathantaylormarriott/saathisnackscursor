@@ -1,21 +1,25 @@
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Footer, { type FooterVariant } from "@/components/Footer";
 
 interface LayoutProps {
   children: React.ReactNode;
   /** Hide site footer (e.g. admin) */
   hideFooter?: boolean;
+  /** Sand background + dark copy (e.g. menu page) */
+  footerVariant?: FooterVariant;
 }
 
-const Layout = ({ children, hideFooter }: LayoutProps) => {
+const Layout = ({ children, hideFooter, footerVariant = "default" }: LayoutProps) => {
   return (
     <>
       <Navbar />
-      {/* Main paints above the footer; scrolling reveals the sticky footer (same pattern as Big Green Tent) */}
-      <main className="relative z-10 min-h-screen bg-background pt-[var(--nav-height)]">{children}</main>
+      {/* Desktop: sticky “reveal” footer. Mobile: normal document flow (avoids sticky/jank). */}
+      <main className="relative z-10 min-h-0 min-w-0 overflow-x-clip bg-background pt-[var(--nav-height)] md:min-h-screen">
+        {children}
+      </main>
       {!hideFooter ? (
-        <div className="sticky bottom-0 left-0 right-0 z-0">
-          <Footer />
+        <div className="relative z-10 md:sticky md:bottom-0 md:left-0 md:right-0 md:z-0">
+          <Footer variant={footerVariant} />
         </div>
       ) : null}
     </>

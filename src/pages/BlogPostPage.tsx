@@ -1,5 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
+import SeoHead from "@/components/SeoHead";
+import { SEO } from "@/lib/seo";
 import { PostBody } from "@/components/blog/PostBody";
 import SpotlightCard from "@/components/SpotlightCard";
 import { useBlogPosts } from "@/hooks/use-blog-posts";
@@ -14,6 +16,7 @@ const BlogPostPage = () => {
   if (loading) {
     return (
       <Layout>
+        <SeoHead title={SEO.blog.title} description={SEO.blog.description} />
         <div className="section-padding text-center font-body text-muted-foreground">Loading story…</div>
       </Layout>
     );
@@ -22,6 +25,7 @@ const BlogPostPage = () => {
   if (!post) {
     return (
       <Layout>
+        <SeoHead title="Story not found" description={SEO.blog.description} noindex />
         <div className="section-padding text-center">
           <h1 className="font-display text-3xl font-bold text-deep-purple mb-4">Post Not Found</h1>
           <Link to="/blog" className="text-primary font-label hover:underline">
@@ -32,10 +36,14 @@ const BlogPostPage = () => {
     );
   }
 
+  const ogImage =
+    post.image && !post.image.startsWith("data:") && !post.image.startsWith("blob:") ? post.image : undefined;
+
   return (
     <Layout>
-      <section className="section-padding bg-deep-purple text-deep-purple-foreground">
-        <div className="container mx-auto max-w-3xl">
+      <SeoHead title={post.title} description={post.excerpt} ogImage={ogImage} />
+      <section className="page-hero-band">
+        <div className="container mx-auto max-w-3xl relative z-10">
           <Link to="/blog" className="font-label text-sm text-white hover:text-primary inline-flex items-center gap-1 mb-6">
             <ArrowLeft size={16} /> Back to stories
           </Link>
@@ -45,7 +53,9 @@ const BlogPostPage = () => {
             >
               {post.category}
             </span>
-            <h1 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">{post.title}</h1>
+            <h1 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4 break-words text-balance">
+              {post.title}
+            </h1>
             <p className="font-label text-sm text-white">{post.date}</p>
           </div>
         </div>
@@ -61,7 +71,7 @@ const BlogPostPage = () => {
 
       <section className="section-padding">
         <div className="container mx-auto max-w-3xl">
-          <div className="prose prose-lg max-w-none font-body">
+          <div className="prose prose-lg max-w-none font-body min-w-0 break-words prose-img:max-w-full">
             <PostBody blocks={post.blocks} content={post.content} />
           </div>
 
@@ -78,14 +88,14 @@ const BlogPostPage = () => {
                     <SpotlightCard
                       onSand
                       spotlightColor={i === 0 ? "rgba(253, 58, 125, 0.15)" : "rgba(60, 188, 214, 0.15)"}
-                      className="h-full transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_#4D4846] motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:shadow-[6px_6px_0_#4D4846]"
+                      className="h-full transition-transform duration-300 ease-out md:group-hover:-translate-y-1 md:group-hover:shadow-[8px_8px_0_#4D4846] motion-reduce:transition-none motion-reduce:md:group-hover:translate-y-0 motion-reduce:md:group-hover:shadow-[6px_6px_0_#4D4846]"
                     >
                       <span
                         className={`inline-block rounded-full px-3 py-1 font-label text-xs font-semibold ${pillThemeToClass(related.pillTheme)}`}
                       >
                         {related.category}
                       </span>
-                      <h4 className="font-display text-base font-semibold text-deep-purple mt-1 group-hover:text-primary transition-colors">
+                      <h4 className="font-display text-base font-semibold text-deep-purple mt-1 md:group-hover:text-primary transition-colors">
                         {related.title}
                       </h4>
                     </SpotlightCard>

@@ -1,35 +1,52 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
-import MughalDivider from "@/components/MughalDivider";
 import { MENU_ITEMS, SITE_CONFIG } from "@/config/settings";
 import { AlertTriangle } from "lucide-react";
-import heroBg from "@/assets/snackshero.webp";
-import biryaniImg from "@/assets/biryani.webp";
+import SeoHead from "@/components/SeoHead";
+import LunchPackageCarousel from "@/components/LunchPackageCarousel";
+import { SEO } from "@/lib/seo";
+import { SITE_IMAGES } from "@/lib/site-images";
+
+/** Display-only chips (same look as former choice pills; not interactive on the web menu). */
+const MENU_OPTION_PILL =
+  "inline-flex font-body text-sm px-4 py-2 rounded-full border-2 border-input bg-muted text-foreground cursor-default select-none";
 
 const MenuPage = () => {
-  const [selectedMain, setSelectedMain] = useState<string>("");
-
   return (
-    <Layout>
-      {/* Hero */}
-      <section className="section-padding bg-deep-purple text-deep-purple-foreground">
+    <Layout footerVariant="sand">
+      <SeoHead title={SEO.menu.title} description={SEO.menu.description} />
+      {/* Sand title band — reads on soft sand; body copy uses charcoal/foreground */}
+      <section className="relative scroll-mt-[var(--nav-sticky-offset)] border-b border-border/50 bg-background px-4 md:px-8 py-12 md:py-14 lg:py-16">
         <div className="container mx-auto text-center">
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="font-display text-4xl md:text-5xl font-bold mb-3 text-deep-purple">
             Our <span className="text-primary">Menu</span>
           </h1>
-          <p className="font-body text-lg text-white max-w-2xl mx-auto">
+          <p className="font-body text-lg text-foreground/90 max-w-2xl mx-auto leading-relaxed">
             Authentic South Asian catering packages for events, team lunches, and celebrations.
             Collection from Birmingham.
           </p>
         </div>
       </section>
 
+      {/* Forest green + dot grid — matches Index “A Taste of Our Menu” */}
+      <div className="relative bg-deep-purple text-deep-purple-foreground">
+        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
+          <div
+            className="absolute inset-0 opacity-[0.14]"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 1px 1px, hsl(34 91% 91% / 0.45) 1.2px, transparent 0)",
+              backgroundSize: "10px 10px",
+            }}
+          />
+        </div>
+
+        <div className="relative z-10">
       {/* Lunch Package - Hero Card */}
-      <section className="section-padding">
+      <section className="px-4 md:px-8 pt-14 md:pt-28 pb-8 md:pb-10">
         <div className="container mx-auto">
-          <div className="card-saathi-on-sand p-5 sm:p-8 md:p-12">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="card-saathi p-5 sm:p-8 md:p-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-start lg:items-center">
               <div>
                 <div className="flex flex-wrap gap-2 mb-4">
                   <span className="badge-halal">Most Popular</span>
@@ -44,28 +61,22 @@ const MenuPage = () => {
 
                 <div className="space-y-4 mb-6">
                   <div>
-                    <h4 className="font-label text-sm font-semibold text-deep-purple mb-2">Main (Choose One)</h4>
+                    <h4 className="font-label text-sm font-semibold text-deep-purple mb-2">Choose One Main</h4>
                     <div className="flex flex-wrap gap-2">
                       {MENU_ITEMS.lunchPackage.mains.map((m) => (
-                        <button
-                          key={m}
-                          onClick={() => setSelectedMain(m)}
-                          className={`font-body text-sm px-4 py-2 rounded-full border-2 transition-all ${
-                            selectedMain === m
-                              ? "border-primary bg-primary/10 text-primary font-semibold"
-                              : "border-input bg-muted text-foreground hover:border-primary/50"
-                          }`}
-                        >
+                        <span key={m} className={MENU_OPTION_PILL}>
                           {m}
-                        </button>
+                        </span>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-label text-sm font-semibold text-deep-purple mb-2">Starters (Choose Two)</h4>
+                    <h4 className="font-label text-sm font-semibold text-deep-purple mb-2">Choose Two Starters</h4>
                     <div className="flex flex-wrap gap-2">
                       {MENU_ITEMS.lunchPackage.starters.map((s) => (
-                        <span key={s} className="font-body text-sm bg-muted px-3 py-1 rounded-full">{s}</span>
+                        <span key={s} className={MENU_OPTION_PILL}>
+                          {s}
+                        </span>
                       ))}
                     </div>
                   </div>
@@ -98,51 +109,46 @@ const MenuPage = () => {
                   Enquire about this package
                 </Link>
               </div>
-              <div className="flex justify-center">
-                <div className="aspect-[4/3] w-full max-w-md overflow-hidden rounded-2xl shadow-[0_12px_40px_-12px_hsl(20_5%_29%_/0.2)] ring-1 ring-deep-purple/10">
-                  <img
-                    src={biryaniImg}
-                    alt="Chicken biryani catering package"
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
+              <div className="flex justify-center lg:justify-end w-full min-w-0">
+                <LunchPackageCarousel />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <MughalDivider />
-
       {/* Snack Boxes */}
-      <section className="section-padding bg-muted/50">
+      <section className="px-4 md:px-8 pt-2 md:pt-4 pb-14 md:pb-28">
         <div className="container mx-auto">
-          <h2 className="font-display text-3xl font-bold text-deep-purple text-center mb-12">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-center mb-10 md:mb-12 text-white drop-shadow-sm">
             Snack Box Options
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 max-w-6xl mx-auto">
             {/* Veg Snack Box */}
             <div>
-              <div className="card-saathi-on-sand h-full">
-                <div className="h-48 rounded-xl overflow-hidden mb-4">
-                  <img src={heroBg} alt="Vegetarian snack box" className="w-full h-full object-cover" loading="lazy" />
+              <div className="card-saathi flex h-full flex-col p-8 sm:p-9 md:p-10">
+                <div className="h-56 sm:h-60 md:h-72 shrink-0 rounded-xl overflow-hidden mb-5">
+                  <img
+                    src={SITE_IMAGES.samosa}
+                    alt="Vegetarian snack box"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
-                <div className="flex gap-2 mb-3">
-                  <span className="badge-vegetarian">Vegetarian ✓</span>
+                <div className="mb-4 flex min-h-[2rem] flex-wrap items-center gap-2">
+                  <span className="badge-vegetarian">Vegetarian</span>
                   <span className="badge-halal">Halal</span>
                 </div>
-                <h3 className="font-display text-2xl font-bold text-deep-purple mb-1">{MENU_ITEMS.vegSnackBox.name}</h3>
-                <p className="font-display text-3xl font-bold text-primary mb-3">
-                  £{MENU_ITEMS.vegSnackBox.pricePerPerson}<span className="text-base font-normal text-muted-foreground">/person</span>
+                <h3 className="font-display text-3xl md:text-4xl font-bold text-deep-purple mb-2">{MENU_ITEMS.vegSnackBox.name}</h3>
+                <p className="font-display text-2xl md:text-3xl font-bold text-primary mb-4">
+                  £{MENU_ITEMS.vegSnackBox.pricePerPerson}<span className="text-sm md:text-base font-normal text-muted-foreground">/person</span>
                 </p>
-                <ul className="font-body text-sm text-muted-foreground mb-4 space-y-1">
+                <ul className="font-body text-base text-muted-foreground mb-6 space-y-1.5">
                   {MENU_ITEMS.vegSnackBox.items.map((item) => (
                     <li key={item}>• {item}</li>
                   ))}
                 </ul>
-                <p className="font-label text-xs text-muted-foreground mb-4">{MENU_ITEMS.vegSnackBox.note}</p>
-                <Link to="/contact" className="btn-primary-pill flex w-full justify-center text-sm">
+                <Link to="/contact" className="btn-primary-pill-block mt-auto shrink-0">
                   Enquire Now
                 </Link>
               </div>
@@ -150,24 +156,28 @@ const MenuPage = () => {
 
             {/* Meat Snack Box */}
             <div>
-              <div className="card-saathi-on-sand h-full">
-                <div className="h-48 rounded-xl overflow-hidden mb-4">
-                  <img src={heroBg} alt="Meat snack box" className="w-full h-full object-cover" loading="lazy" />
+              <div className="card-saathi flex h-full flex-col p-8 sm:p-9 md:p-10">
+                <div className="h-56 sm:h-60 md:h-72 shrink-0 rounded-xl overflow-hidden mb-5">
+                  <img
+                    src={SITE_IMAGES.chickenKebab}
+                    alt="Meat snack box"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
-                <div className="flex gap-2 mb-3">
+                <div className="mb-4 flex min-h-[2rem] flex-wrap items-center gap-2">
                   <span className="badge-halal">Halal</span>
                 </div>
-                <h3 className="font-display text-2xl font-bold text-deep-purple mb-1">{MENU_ITEMS.meatSnackBox.name}</h3>
-                <p className="font-display text-3xl font-bold text-primary mb-3">
-                  £{MENU_ITEMS.meatSnackBox.pricePerPerson}<span className="text-base font-normal text-muted-foreground">/person</span>
+                <h3 className="font-display text-3xl md:text-4xl font-bold text-deep-purple mb-2">{MENU_ITEMS.meatSnackBox.name}</h3>
+                <p className="font-display text-2xl md:text-3xl font-bold text-primary mb-4">
+                  £{MENU_ITEMS.meatSnackBox.pricePerPerson}<span className="text-sm md:text-base font-normal text-muted-foreground">/person</span>
                 </p>
-                <ul className="font-body text-sm text-muted-foreground mb-4 space-y-1">
+                <ul className="font-body text-base text-muted-foreground mb-6 space-y-1.5">
                   {MENU_ITEMS.meatSnackBox.items.map((item) => (
                     <li key={item}>• {item}</li>
                   ))}
                 </ul>
-                <p className="font-label text-xs text-muted-foreground mb-4">{MENU_ITEMS.meatSnackBox.note}</p>
-                <Link to="/contact" className="btn-primary-pill flex w-full justify-center text-sm">
+                <Link to="/contact" className="btn-primary-pill-block mt-auto shrink-0">
                   Enquire Now
                 </Link>
               </div>
@@ -179,7 +189,7 @@ const MenuPage = () => {
       {/* Allergen Info */}
       <section className="section-padding">
         <div className="container mx-auto max-w-3xl">
-          <h2 className="font-display text-2xl font-bold text-deep-purple text-center mb-8">
+          <h2 className="font-display text-2xl font-bold text-center mb-8 text-white drop-shadow-sm">
             Allergen & Dietary Information
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -189,23 +199,26 @@ const MenuPage = () => {
               { label: "Contains Gluten", emoji: "🌾" },
               { label: "Contains Dairy (Raita)", emoji: "🥛" },
             ].map((item) => (
-              <div key={item.label} className="card-saathi-on-sand text-center p-4">
+              <div key={item.label} className="card-saathi text-center !p-4">
                 <span className="text-2xl mb-2 block">{item.emoji}</span>
                 <span className="font-label text-xs font-medium text-foreground">{item.label}</span>
               </div>
             ))}
           </div>
-          <p className="font-body text-sm text-muted-foreground text-center">
+          <p className="font-body text-sm text-white/85 text-center">
             For specific allergen queries please{" "}
-            <Link to="/contact" className="text-primary font-semibold hover:underline">contact us</Link> when you enquire so we can advise.
+            <Link to="/contact" className="text-primary font-semibold hover:text-mustard hover:underline">
+              contact us
+            </Link>{" "}
+            when you enquire so we can advise.
           </p>
         </div>
       </section>
 
       {/* Kitchen Hire */}
-      <section className="py-12 bg-secondary/10">
+      <section className="border-t border-white/15 py-12">
         <div className="container mx-auto px-4 text-center">
-          <p className="font-body text-foreground">
+          <p className="font-body text-white/90">
             Need a kitchen space? We offer kitchen hire in Birmingham.{" "}
             <Link
               to="/contact?type=kitchen-hire"
@@ -217,6 +230,8 @@ const MenuPage = () => {
           </p>
         </div>
       </section>
+        </div>
+      </div>
     </Layout>
   );
 };

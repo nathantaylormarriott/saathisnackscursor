@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { ShinyCtaLink } from "@/components/ui/shiny-cta-link";
@@ -38,9 +39,9 @@ const Navbar = () => {
   return (
     <nav
       id="site-navbar"
-      className="fixed top-0 left-0 right-0 z-50 frosted-glass border-b border-border pt-[env(safe-area-inset-top,0px)]"
+      className="fixed top-0 left-0 right-0 z-[100] frosted-glass border-b border-border pt-[env(safe-area-inset-top,0px)]"
     >
-      <div className="container mx-auto flex h-16 min-h-[4rem] items-center justify-between">
+      <div className="relative z-[2] container mx-auto flex h-16 min-h-[4rem] min-w-0 items-center justify-between gap-2">
         <Link to="/" className="flex min-h-[44px] min-w-0 items-center gap-2 py-2 pr-2">
           <span className="font-display text-xl font-bold tracking-tight text-deep-purple sm:text-2xl">
             Saathi<span className="text-primary">Snacks</span>
@@ -78,38 +79,55 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile overlay */}
-      {mobileOpen ? (
-        <div
-          id="mobile-nav-panel"
-          className="fixed inset-x-0 bottom-0 top-[var(--nav-height)] z-40 flex flex-col items-center gap-2 overflow-y-auto overscroll-contain bg-background px-6 py-8 pb-[max(2rem,env(safe-area-inset-bottom,0px))] md:hidden"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Site navigation"
-        >
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              onClick={() => setMobileOpen(false)}
-              className={`flex min-h-[48px] w-full max-w-sm items-center justify-center rounded-xl px-4 py-3 font-display text-xl font-semibold transition-colors active:bg-muted ${
-                isNavLinkActive(link.to, location.pathname, location.search) ? "text-primary" : "text-foreground"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <div className="mt-4 w-full max-w-sm">
-            <ShinyCtaLink
-              to="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="min-h-[48px] w-full justify-center py-3 text-base"
-            >
-              Enquire Now
-            </ShinyCtaLink>
-          </div>
-        </div>
-      ) : null}
+      {/* Mobile menu is portaled to body so fixed layers are not trapped by nav backdrop-blur (frosted-glass). z < nav z-[100] so bar stays on top. */}
+      {mobileOpen
+        ? createPortal(
+            <>
+              <button
+                type="button"
+                aria-label="Close menu"
+                className="fixed inset-x-0 bottom-0 top-[var(--nav-height)] z-[90] bg-black/50 md:hidden"
+                onClick={() => setMobileOpen(false)}
+              />
+              <div
+                className="fixed inset-x-0 bottom-0 top-[var(--nav-height)] z-[91] flex flex-col items-stretch justify-start overflow-y-auto overscroll-contain px-4 pb-[max(2rem,env(safe-area-inset-bottom,0px))] pt-6 md:hidden pointer-events-none"
+              >
+                <div
+                  id="mobile-nav-panel"
+                  data-lenis-prevent
+                  data-lenis-prevent-touch
+                  className="pointer-events-auto mx-auto flex w-full max-w-md flex-col gap-2 rounded-2xl border border-border bg-background p-2 shadow-[0_12px_48px_rgba(0,0,0,0.22)] touch-manipulation"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="Site navigation"
+                >
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.label}
+                      to={link.to}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex min-h-[48px] w-full items-center justify-center rounded-xl px-4 py-3 font-display text-lg font-semibold transition-colors active:bg-muted sm:text-xl ${
+                        isNavLinkActive(link.to, location.pathname, location.search) ? "text-primary" : "text-foreground"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                  <div className="border-t border-border/60 p-2 pt-3">
+                    <ShinyCtaLink
+                      to="/contact"
+                      onClick={() => setMobileOpen(false)}
+                      className="min-h-[48px] w-full justify-center py-3 text-sm sm:text-base"
+                    >
+                      Enquire Now
+                    </ShinyCtaLink>
+                  </div>
+                </div>
+              </div>
+            </>,
+            document.body
+          )
+        : null}
     </nav>
   );
 };

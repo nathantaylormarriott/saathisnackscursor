@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/Layout";
+import SeoHead from "@/components/SeoHead";
+import { SEO } from "@/lib/seo";
 import { SITE_CONFIG, sitePhoneTelHref } from "@/config/settings";
 import { Mail, MapPin, Send, Phone } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -8,6 +10,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { insertEnquiry } from "@/lib/supabase-api";
+import { fireSubscribeStyleConfetti } from "@/registry/magicui/confetti";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -97,14 +100,15 @@ const ContactPage = () => {
       }
     }
 
+    fireSubscribeStyleConfetti();
     setSubmitted(true);
-    toast.success("Thank you! We'll be in touch shortly.");
   };
 
   return (
     <Layout>
-      <section className="bg-deep-purple text-deep-purple-foreground px-4 py-8 md:px-8 md:py-10">
-        <div className="container mx-auto text-center">
+      <SeoHead title={SEO.contact.title} description={SEO.contact.description} />
+      <section className="page-hero-band">
+        <div className="container mx-auto text-center relative z-10">
           <h1 className="font-display text-4xl md:text-5xl font-bold mb-3">
             Get in <span className="text-primary">Touch</span>
           </h1>
@@ -119,13 +123,16 @@ const ContactPage = () => {
         <div className="container mx-auto max-w-5xl space-y-10 lg:space-y-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Contact Info - cards only; map sits below on lg */}
-            <div className="lg:col-span-1 space-y-6">
+            <div className="min-w-0 lg:col-span-1 space-y-6">
               <div className="card-saathi-on-sand">
                 <div className="flex items-start gap-3">
                   <Mail size={20} className="text-primary mt-1" />
-                  <div>
+                  <div className="min-w-0">
                     <h3 className="font-label text-sm font-semibold text-deep-purple">Email</h3>
-                    <a href={`mailto:${SITE_CONFIG.email}`} className="font-body text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <a
+                      href={`mailto:${SITE_CONFIG.email}`}
+                      className="min-w-0 font-body text-sm text-muted-foreground hover:text-primary transition-colors break-words"
+                    >
                       {SITE_CONFIG.email}
                     </a>
                   </div>
@@ -134,9 +141,12 @@ const ContactPage = () => {
               <div className="card-saathi-on-sand">
                 <div className="flex items-start gap-3">
                   <Phone size={20} className="text-primary mt-1" />
-                  <div>
+                  <div className="min-w-0">
                     <h3 className="font-label text-sm font-semibold text-deep-purple">Phone</h3>
-                    <a href={sitePhoneTelHref()} className="font-body text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <a
+                      href={sitePhoneTelHref()}
+                      className="font-body text-sm text-muted-foreground hover:text-primary transition-colors break-words"
+                    >
                       {SITE_CONFIG.phone}
                     </a>
                   </div>
@@ -145,9 +155,9 @@ const ContactPage = () => {
               <div className="card-saathi-on-sand">
                 <div className="flex items-start gap-3">
                   <MapPin size={20} className="text-primary mt-1" />
-                  <div>
+                  <div className="min-w-0">
                     <h3 className="font-label text-sm font-semibold text-deep-purple">Location</h3>
-                    <p className="font-body text-sm text-muted-foreground">{SITE_CONFIG.address}</p>
+                    <p className="font-body text-sm text-muted-foreground break-words">{SITE_CONFIG.address}</p>
                     <p className="font-label text-xs text-muted-foreground mt-1">Collection only. We do not currently offer delivery</p>
                   </div>
                 </div>
@@ -155,14 +165,16 @@ const ContactPage = () => {
             </div>
 
             {/* Form */}
-            <div className="lg:col-span-2">
+            <div className="min-w-0 lg:col-span-2">
               {submitted ? (
                 <div className="card-midcentury-on-sand text-center py-12 p-6">
                   <div className="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-4">
                     <Send size={28} className="text-success" />
                   </div>
                   <h2 className="font-display text-2xl font-bold text-deep-purple mb-2">Message Sent!</h2>
-                  <p className="font-body text-muted-foreground">Thank you for getting in touch. We'll respond as soon as possible.</p>
+                  <p className="font-body text-muted-foreground">
+                    Thank you for getting in touch. We&apos;ll respond as soon as possible.
+                  </p>
                 </div>
               ) : (
                 <form
@@ -249,7 +261,10 @@ const ContactPage = () => {
 
           {/* Full-width map below info + form on lg; below form on small screens */}
           <div className="w-full">
-            <div className="card-midcentury-on-sand h-[240px] sm:h-[260px] lg:h-[300px] w-full overflow-hidden">
+            <div
+              className="card-midcentury-on-sand h-[240px] sm:h-[260px] lg:h-[300px] w-full overflow-hidden"
+              data-lenis-prevent
+            >
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2429.5!2d-1.8881!3d52.4966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4870bc8a5a3c9e9b%3A0x2e3b0c3f1a2b4c5d!2sSaathi%20House%2C%2049%20Bevington%20Rd%2C%20Aston%2C%20Birmingham%20B6%206HR!5e0!3m2!1sen!2suk!4v1710000000000!5m2!1sen!2suk"
                 width="100%"
