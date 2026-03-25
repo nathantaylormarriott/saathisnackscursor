@@ -323,11 +323,6 @@
     @apply font-label text-xs font-semibold px-3 py-1 rounded-full bg-success text-success-foreground;
   }
 
-  /* Menu preview: JS overwrites with measured px; fallback avoids invalid calc before measure */
-  .menu-preview-stack {
-    --menu-preview-header-stack-height: 11rem;
-  }
-
   /* Nav bar: frosted glass (backdrop blur is heavier while scrolling but reads clearly) */
   .frosted-glass {
     @apply backdrop-blur-2xl backdrop-saturate-150;

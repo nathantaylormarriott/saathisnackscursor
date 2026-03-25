@@ -23,7 +23,10 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 frosted-glass border-b border-border">
+    <nav
+      id="site-navbar"
+      className="fixed top-0 left-0 right-0 z-50 frosted-glass border-b border-border"
+    >
       <div className="container mx-auto flex items-center justify-between h-16 px-4 md:px-8">
         <Link to="/" className="flex items-center gap-2">
           <span className="font-display text-2xl font-bold tracking-tight text-deep-purple">

@@ -1,11 +1,10 @@
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ChefHat, Users, Heart, Star, ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
 import { ShinyCtaLink } from "@/components/ui/shiny-cta-link";
 import MughalDivider from "@/components/MughalDivider";
 import SpotlightCard from "@/components/SpotlightCard";
-import { StickyStackSlot } from "@/components/StickyStackSlot";
 import heroBgLight from "@/assets/saathisnacksherolight.webp";
 import snacksHeroPlaceholder from "@/assets/snackshero.webp";
 import biryaniImg from "@/assets/biryani.webp";
@@ -64,23 +63,7 @@ const TRUST_TICKER_ITEMS = [
 
 const Index = () => {
   const menuPreviewRef = useRef<HTMLDivElement>(null);
-  const menuHeaderStickyRef = useRef<HTMLDivElement>(null);
   const [menuPreviewVisible, setMenuPreviewVisible] = useState(false);
-
-  useLayoutEffect(() => {
-    const container = menuPreviewRef.current;
-    const header = menuHeaderStickyRef.current;
-    if (!container || !header) return;
-
-    const syncHeaderStackHeight = () => {
-      container.style.setProperty("--menu-preview-header-stack-height", `${header.offsetHeight}px`);
-    };
-
-    syncHeaderStackHeight();
-    const ro = new ResizeObserver(syncHeaderStackHeight);
-    ro.observe(header);
-    return () => ro.disconnect();
-  }, []);
 
   useEffect(() => {
     const el = menuPreviewRef.current;
@@ -222,7 +205,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Menu preview — sticky section header under nav; cards stack below it */}
+      {/* Menu preview — title scrolls in normal flow; cards stack under navbar only */}
       <section className="relative scroll-mt-[var(--nav-sticky-offset)] bg-deep-purple pt-0 pb-20 md:pb-28">
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
           <div
@@ -235,11 +218,8 @@ const Index = () => {
           />
         </div>
         <div className="container relative z-10 mx-auto px-4 md:px-8">
-          <div ref={menuPreviewRef} className="menu-preview-stack relative mx-auto max-w-6xl">
-            <div
-              ref={menuHeaderStickyRef}
-              className="sticky top-[var(--nav-sticky-offset)] z-30 pb-6 pt-12 text-center md:pt-14"
-            >
+          <div ref={menuPreviewRef} className="relative mx-auto max-w-6xl">
+            <div className="pb-6 pt-12 text-center md:pt-14">
               <h2 className="font-display text-4xl md:text-5xl font-bold mb-2 drop-shadow-sm">
                 <span className="text-white">A Taste of Our</span>{" "}
                 <span className="text-primary">Menu</span>
@@ -250,11 +230,7 @@ const Index = () => {
               <MughalDivider />
             </div>
             {MENU_PREVIEW_ITEMS.map((item, i) => (
-              <StickyStackSlot
-                key={item.name}
-                index={i}
-                stickyTopClassName="top-[calc(var(--nav-sticky-offset)_+_var(--menu-preview-header-stack-height))]"
-              >
+              <div key={item.name} className="mb-6 sm:mb-8 md:mb-10">
                 <div
                   className={
                     menuPreviewVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
@@ -320,7 +296,7 @@ const Index = () => {
                               </span>
                             ))}
                           </div>
-                          <div className="mt-auto flex items-center justify-between gap-3 border-t border-[#4D4846]/12 pt-4">
+                          <div className="mt-auto flex items-center justify-between gap-3 pt-4">
                             <span className="font-label text-xs font-semibold uppercase tracking-wide text-deep-purple/75">
                               View packages & pricing
                             </span>
@@ -336,7 +312,7 @@ const Index = () => {
                     </div>
                   </Link>
                 </div>
-              </StickyStackSlot>
+              </div>
             ))}
             <div className="h-20 sm:h-28 md:h-36" aria-hidden />
             <div className="mt-10 text-center">
@@ -405,7 +381,7 @@ const Index = () => {
         className="section-padding relative scroll-mt-[var(--nav-sticky-offset)] bg-[#2C7B65]"
         aria-labelledby="how-it-works-heading"
       >
-        {/* Clip decor only — section must not use overflow-hidden or sticky stacking breaks */}
+        {/* Clip decor only — avoid overflow-hidden on the section itself */}
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
           <svg className="absolute inset-0 h-full w-full opacity-[0.14]">
             <defs>
@@ -445,28 +421,25 @@ const Index = () => {
                   step: "1",
                   title: "Explore our menu",
                   desc: "Browse packages and prices to find what suits your event or team.",
-                  badgeClass: "bg-white text-[#2C7B65] ring-1 ring-[#4D4846]/12",
                 },
                 {
                   step: "2",
                   title: "Send an enquiry",
                   desc: "Use our contact form to tell us dates, numbers, and dietary needs. We don't take payments or orders on this website; it's enquiries only.",
-                  badgeClass: "bg-[#EF727F] text-white",
                 },
                 {
                   step: "3",
                   title: "We confirm & arrange pickup",
                   desc: "We'll check availability and agree collection in Birmingham with you before anything is confirmed, so there are no clashes or surprises.",
-                  badgeClass: "bg-[#2C7B65] text-white",
                 },
               ] as const
-            ).map((item, index) => (
-              <StickyStackSlot key={item.step} index={index}>
+            ).map((item) => (
+              <div key={item.step} className="mb-6 sm:mb-8 md:mb-10">
                 <div className="card-midcentury group relative overflow-hidden p-5 text-left transition-transform duration-300 ease-out sm:p-6 md:p-7 hover:-translate-y-0.5 hover:shadow-[8px_8px_0_#4D4846] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-[6px_6px_0_#4D4846]">
                   <div className="max-w-[95%]">
                     <div className="mb-3 flex flex-wrap items-center gap-2.5">
                       <div
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl font-display text-base font-bold tabular-nums shadow-[0_4px_14px_-4px_rgba(77,72,70,0.28)] sm:h-11 sm:w-11 sm:text-lg ${item.badgeClass}`}
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary font-display text-base font-bold tabular-nums text-primary-foreground shadow-[0_4px_14px_-4px_rgba(77,72,70,0.28)] sm:h-11 sm:w-11 sm:text-lg"
                         aria-hidden
                       >
                         {item.step}
@@ -480,7 +453,7 @@ const Index = () => {
                     </p>
                   </div>
                 </div>
-              </StickyStackSlot>
+              </div>
             ))}
             <div className="h-20 sm:h-28 md:h-36" aria-hidden />
           </div>
