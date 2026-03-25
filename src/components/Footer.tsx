@@ -19,6 +19,12 @@ const Footer = () => {
             <p className="font-label text-xs text-white">
               Collection only, Birmingham
             </p>
+            <Link
+              to="/admin"
+              className="mt-5 inline-block font-label text-xs uppercase tracking-[0.18em] text-white transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-deep-purple rounded-sm sm:text-sm"
+            >
+              Admin login
+            </Link>
           </div>
 
           {/* Quick Links */}

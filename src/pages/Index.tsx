@@ -11,7 +11,9 @@ import biryaniImg from "@/assets/biryani.webp";
 import ourStoryImg from "@/assets/ourstorysection.webp";
 import saladImg from "@/assets/salad.webp";
 import kitchenImg from "@/assets/kitchen.webp";
-import { testimonials, blogPosts, blogStoryPillClasses } from "@/data/content";
+import { testimonials } from "@/data/content";
+import { useBlogPosts } from "@/hooks/use-blog-posts";
+import { storyPillClassForPost } from "@/lib/blog-utils";
 
 const MENU_PREVIEW_ITEMS = [
   {
@@ -62,6 +64,7 @@ const TRUST_TICKER_ITEMS = [
 ] as const;
 
 const Index = () => {
+  const { posts: blogPosts, loading: blogLoading } = useBlogPosts();
   const menuPreviewRef = useRef<HTMLDivElement>(null);
   const [menuPreviewVisible, setMenuPreviewVisible] = useState(false);
 
@@ -573,7 +576,11 @@ const Index = () => {
             Community <span className="text-primary">stories</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {blogPosts.map((post, i) => (
+            {blogLoading ? (
+              <p className="col-span-full text-center font-body text-muted-foreground">Loading stories…</p>
+            ) : null}
+            {!blogLoading &&
+              blogPosts.map((post, i) => (
               <div key={post.slug}>
                 <Link to={`/blog/${post.slug}`} className="group block h-full">
                   <SpotlightCard
@@ -587,7 +594,7 @@ const Index = () => {
                       </div>
                     )}
                     <span
-                      className={`inline-block rounded-full px-3 py-1 font-label text-xs font-semibold ${blogStoryPillClasses(i)}`}
+                      className={`inline-block rounded-full px-3 py-1 font-label text-xs font-semibold ${storyPillClassForPost(post, i)}`}
                     >
                       {post.category}
                     </span>

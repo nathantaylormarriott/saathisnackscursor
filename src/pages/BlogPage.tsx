@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SpotlightCard from "@/components/SpotlightCard";
-import { blogPosts, blogStoryPillClasses } from "@/data/content";
+import { useBlogPosts } from "@/hooks/use-blog-posts";
+import { storyPillClassForPost } from "@/lib/blog-utils";
 
 const spotlightColors = [
   "rgba(253, 58, 125, 0.15)",
@@ -10,6 +11,8 @@ const spotlightColors = [
 ];
 
 const BlogPage = () => {
+  const { posts: blogPosts, loading } = useBlogPosts();
+
   return (
     <Layout>
       <section className="section-padding bg-deep-purple text-deep-purple-foreground">
@@ -26,7 +29,10 @@ const BlogPage = () => {
       <section className="section-padding">
         <div className="container mx-auto max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post, i) => (
+            {loading ? (
+              <p className="col-span-full text-center font-body text-muted-foreground py-12">Loading stories…</p>
+            ) : (
+              blogPosts.map((post, i) => (
               <div key={post.slug}>
                 <Link to={`/blog/${post.slug}`} className="group block h-full">
                   <SpotlightCard
@@ -40,7 +46,7 @@ const BlogPage = () => {
                       </div>
                     )}
                     <span
-                      className={`inline-block rounded-full px-3 py-1 font-label text-xs font-semibold ${blogStoryPillClasses(i)}`}
+                      className={`inline-block rounded-full px-3 py-1 font-label text-xs font-semibold ${storyPillClassForPost(post, i)}`}
                     >
                       {post.category}
                     </span>
@@ -52,7 +58,8 @@ const BlogPage = () => {
                   </SpotlightCard>
                 </Link>
               </div>
-            ))}
+            ))
+            )}
           </div>
         </div>
       </section>

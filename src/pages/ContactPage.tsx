@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { insertEnquiry } from "@/lib/supabase-api";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -42,7 +43,34 @@ const ContactPage = () => {
   });
 
   const onSubmit = async (data: ContactForm) => {
-    console.log("Contact form submitted:", data);
+    const { error } = await insertEnquiry({
+      name: data.name,
+      email: data.email,
+      phone: data.phone ?? "",
+      enquiryType: data.enquiryType,
+      message: data.message,
+    });
+    if (error) {
+      toast.error(error.message || "Could not send your message. Please try again or email us.");
+      return;
+    }
+
+    const webhook = import.meta.env.VITE_ENQUIRY_WEBHOOK_URL as string | undefined;
+    if (webhook) {
+      try {
+        await fetch(webhook, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...data,
+            submittedAt: new Date().toISOString(),
+          }),
+        });
+      } catch {
+        /* optional webhook — ignore failures */
+      }
+    }
+
     setSubmitted(true);
     toast.success("Thank you! We'll be in touch shortly.");
   };

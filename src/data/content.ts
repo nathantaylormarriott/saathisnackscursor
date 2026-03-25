@@ -1,8 +1,11 @@
 import heroBg from "@/assets/snackshero.webp";
+import type { BlogPost } from "@/types/blog";
 
-export const blogPosts = [
+/** Seed posts (also the fallback when no custom posts exist in localStorage) */
+export const INITIAL_BLOG_POSTS: BlogPost[] = [
   {
     slug: "why-corporate-lunch-social-enterprise",
+    pillTheme: "coral",
     title: "Why Your Next Business Lunch Should Come From a Social Enterprise",
     excerpt: "Discover how choosing a social enterprise caterer delivers not just incredible food, but tangible community impact that aligns with your organisation's CSR goals.",
     category: "Social Impact",
@@ -33,6 +36,7 @@ This isn't catering by numbers: it's food made with love, by people who care, fo
   },
   {
     slug: "behind-the-kitchen-women-of-saathi-snacks",
+    pillTheme: "forest",
     title: "Behind the Kitchen: The Women of Saathi Snacks",
     excerpt: "Meet the inspiring women who bring their culinary heritage to every dish, building confidence and community along the way.",
     category: "Community News",
@@ -60,6 +64,7 @@ The kitchen becomes a classroom, a community centre, and a launchpad, all at onc
   },
   {
     slug: "changing-lives-one-biryani",
+    pillTheme: "mustard",
     title: "How Saathi Snacks Is Changing Lives One Biryani at a Time",
     excerpt: "From employment training to youth programmes, discover how choosing Saathi Snacks creates a ripple effect of positive change across Birmingham.",
     category: "Behind the Scenes",
@@ -95,6 +100,9 @@ Ready to make your next event meaningful? Browse our menu and send an enquiry. W
   },
 ];
 
+/** @deprecated Use `INITIAL_BLOG_POSTS` or `useBlogPosts()` / `getBlogPosts()` */
+export const blogPosts = INITIAL_BLOG_POSTS;
+
 /** Solid category chips (palette + white text) — legacy fallback */
 export const blogCategoryPillClass: Record<string, string> = {
   "Social Impact": "bg-primary text-primary-foreground",
@@ -111,12 +119,6 @@ export function blogStoryPillClasses(index: number): string {
   return index % 2 === 0
     ? "bg-primary text-primary-foreground"
     : "bg-secondary text-secondary-foreground";
-}
-
-export function blogPostStoryPillClass(slug: string): string {
-  const i = blogPosts.findIndex((p) => p.slug === slug);
-  if (i === -1) return "bg-muted text-muted-foreground";
-  return blogStoryPillClasses(i);
 }
 
 export const testimonials = [

@@ -1,19 +1,32 @@
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
+import { PostBody } from "@/components/blog/PostBody";
 import SpotlightCard from "@/components/SpotlightCard";
-import { blogPosts, blogPostStoryPillClass } from "@/data/content";
+import { useBlogPosts } from "@/hooks/use-blog-posts";
+import { pillThemeToClass } from "@/lib/blog-utils";
 import { ArrowLeft } from "lucide-react";
 
 const BlogPostPage = () => {
   const { slug } = useParams();
+  const { posts: blogPosts, loading } = useBlogPosts();
   const post = blogPosts.find((p) => p.slug === slug);
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="section-padding text-center font-body text-muted-foreground">Loading story…</div>
+      </Layout>
+    );
+  }
 
   if (!post) {
     return (
       <Layout>
         <div className="section-padding text-center">
           <h1 className="font-display text-3xl font-bold text-deep-purple mb-4">Post Not Found</h1>
-          <Link to="/blog" className="text-primary font-label hover:underline">← Back to stories</Link>
+          <Link to="/blog" className="text-primary font-label hover:underline">
+            ← Back to stories
+          </Link>
         </div>
       </Layout>
     );
@@ -28,7 +41,7 @@ const BlogPostPage = () => {
           </Link>
           <div>
             <span
-              className={`inline-block rounded-full px-3 py-1 font-label text-xs font-semibold ${blogPostStoryPillClass(post.slug)}`}
+              className={`inline-block rounded-full px-3 py-1 font-label text-xs font-semibold ${pillThemeToClass(post.pillTheme)}`}
             >
               {post.category}
             </span>
@@ -38,7 +51,6 @@ const BlogPostPage = () => {
         </div>
       </section>
 
-      {/* Hero image */}
       {post.image && (
         <div className="container mx-auto max-w-3xl px-4 -mt-8">
           <div className="rounded-2xl overflow-hidden" style={{ boxShadow: "var(--shadow-card)" }}>
@@ -50,47 +62,9 @@ const BlogPostPage = () => {
       <section className="section-padding">
         <div className="container mx-auto max-w-3xl">
           <div className="prose prose-lg max-w-none font-body">
-            {post.content.split("\n\n").map((paragraph, i) => {
-              if (paragraph.trim().startsWith("## ")) {
-                return (
-                  <h2 key={i} className="font-display text-2xl font-bold text-deep-purple mt-8 mb-4">
-                    {paragraph.replace("## ", "")}
-                  </h2>
-                );
-              }
-              if (paragraph.trim().startsWith("- ")) {
-                const items = paragraph.split("\n").filter((l) => l.trim().startsWith("- "));
-                return (
-                  <ul key={i} className="space-y-2 my-4">
-                    {items.map((item, j) => (
-                      <li key={j} className="text-foreground/80 flex items-start gap-2">
-                        <span className="text-primary mt-1">•</span>
-                        <span dangerouslySetInnerHTML={{ __html: item.replace("- ", "").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") }} />
-                      </li>
-                    ))}
-                  </ul>
-                );
-              }
-              if (paragraph.trim().startsWith("1. ")) {
-                const items = paragraph.split("\n").filter((l) => /^\d+\./.test(l.trim()));
-                return (
-                  <ol key={i} className="space-y-2 my-4 list-decimal list-inside">
-                    {items.map((item, j) => (
-                      <li key={j} className="text-foreground/80">
-                        <span dangerouslySetInnerHTML={{ __html: item.replace(/^\d+\.\s*/, "").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") }} />
-                      </li>
-                    ))}
-                  </ol>
-                );
-              }
-              if (paragraph.trim()) {
-                return <p key={i} className="text-foreground/80 leading-relaxed mb-4">{paragraph.trim()}</p>;
-              }
-              return null;
-            })}
+            <PostBody blocks={post.blocks} content={post.content} />
           </div>
 
-          {/* Related Posts */}
           <div className="mt-16 pt-8 border-t border-border">
             <h3 className="font-display text-xl font-bold text-deep-purple mb-6">
               More <span className="text-primary">stories</span>
@@ -107,7 +81,7 @@ const BlogPostPage = () => {
                       className="h-full transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_#4D4846] motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:shadow-[6px_6px_0_#4D4846]"
                     >
                       <span
-                        className={`inline-block rounded-full px-3 py-1 font-label text-xs font-semibold ${blogPostStoryPillClass(related.slug)}`}
+                        className={`inline-block rounded-full px-3 py-1 font-label text-xs font-semibold ${pillThemeToClass(related.pillTheme)}`}
                       >
                         {related.category}
                       </span>
