@@ -18,7 +18,7 @@ import { fadeUp, fadeUpEase } from "@/lib/motion";
 const MENU_PREVIEW_ITEMS = [
   {
     image: menuPreview.samosas,
-    imageAlt: "Samosas — meat and vegetable options",
+    imageAlt: "Vegetable samosas with green chutney",
     name: "Samosas",
     detail: "Meat and vegetable available",
     description: "Crispy pastry parcels with spiced fillings — perfect for parties, grazing tables, and events.",
@@ -367,8 +367,8 @@ const Index = () => {
               },
               {
                 icon: Users,
-                title: "Flexible Packages for Any Group Size",
-                desc: "From intimate team meetings to large events, we have a package that fits your needs and budget.",
+                title: "Catering for Groups up to 30",
+                desc: "Packages sized for team lunches, meetings, and community events. Collection from Birmingham — delivery available at extra cost.",
                 iconWrap: "bg-[#EF727F] text-white shadow-[0_4px_14px_-4px_rgba(77,72,70,0.32)]",
               },
               {

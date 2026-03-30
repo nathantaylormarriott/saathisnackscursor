@@ -28,7 +28,7 @@ export const SITE_IMAGES = {
 /** Lunch catering package hero carousel (menu page) — opens on full spread, then samosa, pakoras, kebabs, biryani, salad & sides */
 export const LUNCH_PACKAGE_CAROUSEL_SLIDES = [
   { src: lunchCateringSpread, alt: "Lunch catering package spread", label: "Package spread" },
-  { src: samosa, alt: "Vegetable samosas", label: "Samosas" },
+  { src: samosa, alt: "Vegetable samosas with green chutney", label: "Samosas" },
   { src: pakora, alt: "Vegetable pakoras", label: "Pakoras" },
   { src: chickenKebab, alt: "Chicken kebabs", label: "Kebabs" },
   { src: biryani, alt: "Biryani", label: "Biryani" },

@@ -81,12 +81,13 @@ const MenuPage = () => {
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-label text-sm font-semibold text-deep-purple mb-2">Always Included</h4>
+                    <h4 className="font-label text-sm font-semibold text-deep-purple mb-2">Available as extras</h4>
                     <div className="flex flex-wrap gap-2">
-                      {MENU_ITEMS.lunchPackage.included.map((inc) => (
-                        <span key={inc} className="font-body text-sm bg-success/10 text-success px-3 py-1 rounded-full">{inc}</span>
+                      {MENU_ITEMS.lunchPackage.upsells.map((item) => (
+                        <span key={item} className="font-body text-sm bg-accent/30 text-foreground/80 px-3 py-1 rounded-full border border-accent/40">{item}</span>
                       ))}
                     </div>
+                    <p className="font-body text-xs text-muted-foreground mt-2">Ask about adding these when you enquire — available at extra cost.</p>
                   </div>
                 </div>
 
@@ -130,7 +131,7 @@ const MenuPage = () => {
                 <div className="h-56 sm:h-60 md:h-72 shrink-0 rounded-xl overflow-hidden mb-5">
                   <img
                     src={SITE_IMAGES.samosa}
-                    alt="Vegetarian snack box"
+                    alt="Vegetarian snack box: samosas with chutney"
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />

@@ -42,10 +42,18 @@ const Navbar = () => {
       className="fixed top-0 left-0 right-0 z-[100] frosted-glass border-b border-border pt-[env(safe-area-inset-top,0px)]"
     >
       <div className="relative z-[2] container mx-auto flex h-16 min-h-[4rem] min-w-0 items-center justify-between gap-2">
-        <Link to="/" className="flex min-h-[44px] min-w-0 items-center gap-2 py-2 pr-2">
-          <span className="font-display text-xl font-bold tracking-tight text-deep-purple sm:text-2xl">
-            Saathi<span className="text-primary">Snacks</span>
-          </span>
+        <Link
+          to="/"
+          className="flex min-h-[44px] min-w-0 items-center gap-2 py-2 pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full"
+        >
+          <img
+            src="/logo-saathi-snacks.png"
+            alt="Saathi Snacks"
+            width={44}
+            height={44}
+            className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-border/40 sm:h-11 sm:w-11"
+            decoding="async"
+          />
         </Link>
 
         {/* Desktop */}
