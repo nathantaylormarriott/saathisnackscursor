@@ -44,16 +44,12 @@ const Navbar = () => {
       <div className="relative z-[2] container mx-auto flex h-16 min-h-[4rem] min-w-0 items-center justify-between gap-2">
         <Link
           to="/"
-          className="flex min-h-[44px] min-w-0 items-center gap-2 py-2 pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full"
+          className="flex min-h-[44px] min-w-0 items-center py-2 pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg"
         >
-          <img
-            src="/logo-saathi-snacks.png"
-            alt="Saathi Snacks"
-            width={44}
-            height={44}
-            className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-border/40 sm:h-11 sm:w-11"
-            decoding="async"
-          />
+          <span className="font-navLogo text-[1.35rem] leading-none tracking-tight [text-shadow:none] sm:text-2xl">
+            <span className="text-deep-purple">Saathi</span>{" "}
+            <span className="text-primary">Snacks</span>
+          </span>
         </Link>
 
         {/* Desktop */}

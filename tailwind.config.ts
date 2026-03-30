@@ -20,6 +20,8 @@ export default {
         display: ['"Poppins"', 'sans-serif'],
         body: ['"DM Sans"', 'sans-serif'],
         label: ['"Poppins"', 'sans-serif'],
+        /** Navbar wordmark — `public/fonts/MountHills.otf` */
+        navLogo: ['"Mount Hills"', 'ui-serif', 'Georgia', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
