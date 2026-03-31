@@ -44,10 +44,11 @@ const Navbar = () => {
       <div className="relative z-[2] container mx-auto flex h-16 min-h-[4rem] min-w-0 items-center justify-between gap-2">
         <Link
           to="/"
+          aria-label="Saathi Snacks home"
           className="flex min-h-[44px] min-w-0 items-center py-2 pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg"
         >
-          <span className="font-navLogo text-[1.35rem] leading-none tracking-tight [text-shadow:none] sm:text-2xl">
-            <span className="text-deep-purple">Saathi</span>{" "}
+          <span className="font-navLogo text-[1.65rem] leading-none tracking-[0.045em] [text-shadow:none] sm:text-[2.05rem]">
+            <span className="text-deep-purple">Saathi</span>
             <span className="text-primary">Snacks</span>
           </span>
         </Link>
