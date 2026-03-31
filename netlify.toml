@@ -3,6 +3,8 @@
   publish = "dist"
 
 # Set in Netlify UI: Site settings → Environment variables
+# VITE_SITE_URL — optional; if unset, the build uses Netlify's URL (same domain as the deploy).
+#   Set explicitly to your canonical domain (e.g. https://www.saathisnacks.org) when it differs from the Netlify URL.
 # VITE_SUPABASE_URL
 # VITE_SUPABASE_ANON_KEY
 #

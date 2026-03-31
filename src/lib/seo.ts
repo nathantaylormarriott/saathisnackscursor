@@ -83,7 +83,23 @@ export function formatPageTitle(pageTitle: string): string {
 }
 
 export function defaultOgImageUrl(): string {
-  return absoluteUrl("/og-default.webp");
+  return absoluteUrl("/og-default.jpg");
+}
+
+/** Absolute image URL for Open Graph (handles relative paths when env origin is unset in the browser). */
+export function resolveShareImageUrl(pathOrAbsolute: string): string {
+  if (pathOrAbsolute.startsWith("http")) return pathOrAbsolute;
+  const path = pathOrAbsolute.startsWith("/") ? pathOrAbsolute : `/${pathOrAbsolute}`;
+  const base = getPublicSiteUrl();
+  if (base) return `${base}${path}`;
+  if (typeof window !== "undefined") {
+    try {
+      return new URL(path, window.location.origin).href;
+    } catch {
+      return path;
+    }
+  }
+  return path;
 }
 
 export function organizationJsonLd(): Record<string, unknown> {

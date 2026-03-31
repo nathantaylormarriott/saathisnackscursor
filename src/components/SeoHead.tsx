@@ -4,6 +4,7 @@ import {
   absoluteUrl,
   defaultOgImageUrl,
   formatPageTitle,
+  resolveShareImageUrl,
   SEO_DEFAULT,
   SEO_SITE_NAME,
 } from "@/lib/seo";
@@ -68,13 +69,16 @@ const SeoHead = ({ title, description, ogImage, noindex, jsonLd }: SeoHeadProps)
       setMeta("property", "og:url", canonical);
     }
 
-    const imageUrl = ogImage
-      ? ogImage.startsWith("http")
-        ? ogImage
-        : absoluteUrl(ogImage.startsWith("/") ? ogImage : `/${ogImage}`)
-      : defaultOgImageUrl();
+    const imageUrl = resolveShareImageUrl(
+      ogImage
+        ? ogImage.startsWith("http")
+          ? ogImage
+          : absoluteUrl(ogImage.startsWith("/") ? ogImage : `/${ogImage}`)
+        : defaultOgImageUrl(),
+    );
     if (imageUrl.startsWith("http")) {
       setMeta("property", "og:image", imageUrl);
+      setMeta("property", "og:image:secure_url", imageUrl);
       setMeta("name", "twitter:image", imageUrl);
     }
 
